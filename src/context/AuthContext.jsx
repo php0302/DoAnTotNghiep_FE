@@ -1,8 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService';
 import { userService } from '../services/userService';
+import websocketService from '../services/websocketService';
 
 const AuthContext = createContext(null);
+
+/** Dispatch để NotificationContext biết token đã thay đổi */
+const notifyAuthChange = () => window.dispatchEvent(new Event('auth-change'));
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser]       = useState(null);
@@ -14,7 +18,10 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       userService.me()
         .then(({ data }) => setUser(data?.data ?? null))
-        .catch(() => localStorage.removeItem('token'))
+        .catch(() => {
+          localStorage.removeItem('token');
+          notifyAuthChange();
+        })
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
@@ -25,11 +32,16 @@ export const AuthProvider = ({ children }) => {
     await authService.login(usernameOrEmail, password);
     const { data } = await userService.me();
     setUser(data?.data ?? null);
+    // Báo NotificationContext kết nối WS
+    notifyAuthChange();
   };
 
   const logout = () => {
+    websocketService.disconnect();
     authService.logout();
     setUser(null);
+    // Báo NotificationContext ngắt WS + clear notifications
+    notifyAuthChange();
   };
 
   return (

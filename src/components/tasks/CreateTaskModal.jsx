@@ -15,6 +15,9 @@ const STATUS_LABELS = { TODO: 'Cần làm', IN_PROGRESS: 'Đang làm', DONE: 'Ho
  * @param {Array} members - danh sách member để assign
  */
 const CreateTaskModal = ({ open, onClose, onCreate, defaultStatus = 'TODO', members = [] }) => {
+  // Lấy ngày hiện tại theo giờ địa phương (YYYY-MM-DD)
+  const today = new Date().toLocaleDateString('en-CA');
+
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -89,7 +92,7 @@ const CreateTaskModal = ({ open, onClose, onCreate, defaultStatus = 'TODO', memb
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Deadline</label>
-            <input type="date" name="deadline" value={form.deadline} onChange={handleChange}
+            <input type="date" name="deadline" value={form.deadline} onChange={handleChange} min={today}
               className="input-field" />
           </div>
           {members.length > 0 && (

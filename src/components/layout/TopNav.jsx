@@ -1,30 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bell, Search } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { notificationService } from '../../services/notificationService';
+import { useNotifications } from '../../context/NotificationContext';
 import Avatar from '../ui/Avatar';
 import NotificationDropdown from '../notifications/NotificationDropdown';
 
 const TopNav = ({ title = 'Dashboard' }) => {
   const { user } = useAuth();
+  const { notifications, unreadCount, markRead, markAllRead } = useNotifications();
   const [notifOpen, setNotifOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
   const notifRef = useRef(null);
-
-  const unreadCount = notifications.filter((n) => !n.read).length;
-
-  const fetchNotifications = () => {
-    notificationService.getAll()
-      .then(({ data }) => setNotifications(data?.data ?? []))
-      .catch(() => {});
-  };
-
-  useEffect(() => {
-    fetchNotifications();
-    // Tự động làm mới thông báo mỗi 30 giây
-    const interval = setInterval(fetchNotifications, 30_000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Đóng dropdown khi click ra ngoài
   useEffect(() => {
@@ -37,13 +22,6 @@ const TopNav = ({ title = 'Dashboard' }) => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const handleMarkRead = async (id) => {
-    await notificationService.markRead(id);
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-    );
-  };
-
   return (
     <header className="h-14 bg-white border-b border-black/10 flex items-center justify-between px-6 flex-shrink-0">
       {/* Title */}
@@ -54,21 +32,25 @@ const TopNav = ({ title = 'Dashboard' }) => {
         {/* Notification bell */}
         <div className="relative" ref={notifRef}>
           <button
+            id="notification-bell-btn"
             onClick={() => setNotifOpen(!notifOpen)}
             className="relative btn-ghost p-2 rounded-lg"
             title="Thông báo"
           >
-            <Bell size={20} />
+            <Bell size={20} className={unreadCount > 0 ? 'text-gray-900' : 'text-warm-gray'} />
             {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center animate-pulse">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </button>
+
           {notifOpen && (
             <NotificationDropdown
               notifications={notifications}
-              onMarkRead={handleMarkRead}
+              onMarkRead={markRead}
+              onMarkAllRead={markAllRead}
+              onClose={() => setNotifOpen(false)}
             />
           )}
         </div>
