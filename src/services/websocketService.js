@@ -1,6 +1,6 @@
 import { Client } from '@stomp/stompjs';
 
-const WS_URL = 'ws://localhost:8080/ws/websocket';
+const WS_URL = 'ws://localhost:8080/ws';
 
 // Exponential backoff delays: 2s → 4s → 8s → 16s → 30s
 const RECONNECT_DELAYS = [2000, 4000, 8000, 16000, 30000];

@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, FolderKanban, CheckSquare,
-  Bell, User, LogOut, ChevronLeft, ChevronRight, Shield
+  Bell, User, LogOut, ChevronLeft, ChevronRight, Shield, BarChart3
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Avatar from '../ui/Avatar';
 
 const NAV_ITEMS = [
-  { to: '/',          icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/projects',  icon: FolderKanban,    label: 'Projects' },
+  { to: '/',          icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/my-tasks',  icon: CheckSquare,     label: 'My Tasks' },
   { to: '/profile',   icon: User,            label: 'Profile' },
 ];
@@ -53,20 +53,26 @@ const Sidebar = () => {
 
       {/* Navigation links */}
       <nav className="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto">
-        {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
-            className={({ isActive }) =>
-              `sidebar-link ${isActive ? 'active' : ''} ${collapsed ? 'justify-center' : ''}`
-            }
-            title={collapsed ? label : undefined}
-          >
-            <Icon size={18} className="flex-shrink-0" />
-            {!collapsed && <span>{label}</span>}
-          </NavLink>
-        ))}
+        {NAV_ITEMS.map(({ to, icon: Icon, label }) => {
+          // Hide Dashboard for regular members
+          if (label === 'Dashboard' && user && ['MEMBER', 'ROLE_MEMBER'].includes(user.role)) {
+            return null;
+          }
+          return (
+            <NavLink
+              key={to}
+              to={to}
+              end={to === '/'}
+              className={({ isActive }) =>
+                `sidebar-link ${isActive ? 'active' : ''} ${collapsed ? 'justify-center' : ''}`
+              }
+              title={collapsed ? label : undefined}
+            >
+              <Icon size={18} className="flex-shrink-0" />
+              {!collapsed && <span>{label}</span>}
+            </NavLink>
+          );
+        })}
 
         {user && ['ADMIN', 'ROLE_ADMIN'].includes(user.role) && (
           <>

@@ -14,17 +14,17 @@ const STATUS_LABELS = { TODO: 'Cần làm', IN_PROGRESS: 'Đang làm', DONE: 'Ho
  * @param {string} defaultStatus - status mặc định ('TODO' | 'IN_PROGRESS' | 'DONE')
  * @param {Array} members - danh sách member để assign
  */
-const CreateTaskModal = ({ open, onClose, onCreate, defaultStatus = 'TODO', members = [] }) => {
+const CreateTaskModal = ({ open, onClose, onCreate, onUpdate, task, defaultStatus = 'TODO', members = [] }) => {
   // Lấy ngày hiện tại theo giờ địa phương (YYYY-MM-DD)
   const today = new Date().toLocaleDateString('en-CA');
 
   const [form, setForm] = useState({
-    title: '',
-    description: '',
-    priority: 'MEDIUM',
-    status: defaultStatus,
-    deadline: '',
-    assignedToId: '',
+    title: task?.title || '',
+    description: task?.description || '',
+    priority: task?.priority || 'MEDIUM',
+    status: task?.status || defaultStatus,
+    deadline: task?.deadline || '',
+    assignedToId: task?.assignee?.id || task?.assignedToId || '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
@@ -43,7 +43,13 @@ const CreateTaskModal = ({ open, onClose, onCreate, defaultStatus = 'TODO', memb
         assignedToId: form.assignedToId ? Number(form.assignedToId) : undefined,
         deadline:   form.deadline   || undefined,
       };
-      await onCreate(payload);
+
+      if (task?.id && onUpdate) {
+        await onUpdate(task.id, payload);
+      } else if (onCreate) {
+        await onCreate(payload);
+      }
+
       setForm({ title: '', description: '', priority: 'MEDIUM', status: defaultStatus, deadline: '', assignedToId: '' });
       onClose();
     } catch (err) {
@@ -54,7 +60,7 @@ const CreateTaskModal = ({ open, onClose, onCreate, defaultStatus = 'TODO', memb
   };
 
   return (
-    <Modal open={open} onClose={onClose} title="Thêm task mới" size="md">
+    <Modal open={open} onClose={onClose} title={task ? 'Sửa task' : 'Thêm task mới'} size="md">
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
           <p className="text-xs text-danger bg-orange-50 border border-orange-200 rounded-lg px-3 py-2">{error}</p>
@@ -112,7 +118,7 @@ const CreateTaskModal = ({ open, onClose, onCreate, defaultStatus = 'TODO', memb
           <button type="button" onClick={onClose} className="btn-secondary">Hủy</button>
           <button type="submit" className="btn-primary" disabled={loading}>
             <CheckSquare size={15} />
-            {loading ? 'Đang tạo...' : 'Tạo task'}
+            {loading ? 'Đang lưu...' : (task ? 'Lưu thay đổi' : 'Tạo task')}
           </button>
         </div>
       </form>

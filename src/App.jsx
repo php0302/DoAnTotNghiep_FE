@@ -10,6 +10,7 @@ import ProjectDetail from './pages/projects/ProjectDetail';
 import MyTasks from './pages/tasks/MyTasks';
 import Profile from './pages/profile/Profile';
 import UserManagement from './pages/admin/UserManagement';
+import StatisticDashboard from './pages/dashboard/StatisticDashboard';
 import Spinner from './components/ui/Spinner';
 
 /** Route yêu cầu đăng nhập */
@@ -44,7 +45,8 @@ function AppRoutes() {
         path="/"
         element={<PrivateRoute><AppLayout /></PrivateRoute>}
       >
-        <Route index element={<Dashboard />} />
+        <Route index element={<StatisticDashboard />} />
+        <Route path="projects" element={<Dashboard />} />
         <Route path="projects/:id" element={<ProjectDetail />} />
         <Route path="my-tasks" element={<MyTasks />} />
         <Route path="profile" element={<Profile />} />

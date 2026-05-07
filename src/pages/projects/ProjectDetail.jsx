@@ -19,10 +19,11 @@ const ProjectDetail = () => {
   const [project, setProject]         = useState(null);
   const [members, setMembers]         = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [editingTask, setEditingTask]   = useState(null);
   const [createStatus, setCreateStatus] = useState(null); // status mặc định khi mở modal tạo task
   const [projLoading, setProjLoading]   = useState(true);
 
-  const { tasks, loading, error, fetchTasks, getTasksByStatus, moveTask, createTask, deleteTask } = useTasks(Number(id));
+  const { tasks, loading, error, fetchTasks, getTasksByStatus, moveTask, createTask, updateTask, deleteTask } = useTasks(Number(id));
 
   useEffect(() => {
     // Load project info
@@ -133,17 +134,21 @@ const ProjectDetail = () => {
           onClose={() => setSelectedTask(null)}
           task={selectedTask}
           onDelete={deleteTask}
+          onEdit={(task) => { setSelectedTask(null); setEditingTask(task); }}
           currentUser={user}
+          projectId={Number(id)}
         />
       )}
 
-      {/* Create Task Modal */}
-      {createStatus !== null && (
+      {/* Create / Edit Task Modal */}
+      {(createStatus !== null || editingTask !== null) && (
         <CreateTaskModal
           open
-          onClose={() => setCreateStatus(null)}
+          onClose={() => { setCreateStatus(null); setEditingTask(null); }}
           onCreate={createTask}
-          defaultStatus={createStatus}
+          onUpdate={updateTask}
+          task={editingTask}
+          defaultStatus={createStatus || editingTask?.status || 'TODO'}
           members={members}
         />
       )}
