@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { projectService } from '../../services/projectService';
 import { userService } from '../../services/userService';
 import { useTasks } from '../../hooks/useTasks';
+import { useProjectRealtime } from '../../hooks/useProjectRealtime';
 import { useAuth } from '../../context/AuthContext';
 import KanbanBoard from '../../components/kanban/KanbanBoard';
 import TaskDetailModal from '../../components/tasks/TaskDetailModal';
@@ -23,7 +24,12 @@ const ProjectDetail = () => {
   const [createStatus, setCreateStatus] = useState(null); // status mặc định khi mở modal tạo task
   const [projLoading, setProjLoading]   = useState(true);
 
-  const { tasks, loading, error, fetchTasks, getTasksByStatus, moveTask, createTask, updateTask, deleteTask } = useTasks(Number(id));
+  const { tasks, setTasks, loading, error, fetchTasks, getTasksByStatus, moveTask, createTask, updateTask, deleteTask } = useTasks(Number(id));
+
+  // ── Realtime updates qua WebSocket ──────────────────────────────────────────
+  // Hook này lắng nghe /topic/project.{id} và tự động cập nhật state `tasks`
+  // khi có thay đổi từ các user khác (filter self-events bằng user?.id)
+  useProjectRealtime(Number(id), setTasks, fetchTasks, user?.id);
 
   useEffect(() => {
     // Load project info

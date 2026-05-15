@@ -46,6 +46,8 @@ export const NotificationProvider = ({ children }) => {
     notifHandlerRef.current = (notification) => {
       setNotifications((prev) => [notification, ...prev]);
       pushToast(notification);
+      // Phát event để Dashboard hoặc component khác lắng nghe và xử lý logic
+      window.dispatchEvent(new CustomEvent('ws:notification', { detail: notification }));
     };
 
     const token = localStorage.getItem('token');

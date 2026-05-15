@@ -4,11 +4,14 @@ import { taskService } from '../services/taskService';
 /**
  * Hook quản lý Tasks theo từng project.
  * Columns: TODO | IN_PROGRESS | DONE
+ * 
+ * Xuất ra `setTasks` để useProjectRealtime có thể apply realtime updates
+ * trực tiếp vào state mà không cần re-fetch từ server.
  */
 export const useTasks = (projectId) => {
-  const [tasks, setTasks]   = useState([]);
+  const [tasks, setTasks]     = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError]   = useState(null);
+  const [error, setError]     = useState(null);
 
   const fetchTasks = useCallback(async () => {
     if (!projectId) return;
@@ -57,5 +60,16 @@ export const useTasks = (projectId) => {
     setTasks((prev) => prev.filter((t) => t.id !== taskId));
   };
 
-  return { tasks, loading, error, fetchTasks, getTasksByStatus, moveTask, createTask, updateTask, deleteTask };
+  return {
+    tasks,
+    setTasks,    // ← Export để useProjectRealtime apply realtime updates
+    loading,
+    error,
+    fetchTasks,
+    getTasksByStatus,
+    moveTask,
+    createTask,
+    updateTask,
+    deleteTask,
+  };
 };

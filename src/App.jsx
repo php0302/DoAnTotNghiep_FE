@@ -8,6 +8,7 @@ import Register from './pages/auth/Register';
 import Dashboard from './pages/Dashboard';
 import ProjectDetail from './pages/projects/ProjectDetail';
 import MyTasks from './pages/tasks/MyTasks';
+import TaskSearchPage from './pages/tasks/TaskSearchPage';
 import Profile from './pages/profile/Profile';
 import UserManagement from './pages/admin/UserManagement';
 import StatisticDashboard from './pages/dashboard/StatisticDashboard';
@@ -49,6 +50,7 @@ function AppRoutes() {
         <Route path="projects" element={<Dashboard />} />
         <Route path="projects/:id" element={<ProjectDetail />} />
         <Route path="my-tasks" element={<MyTasks />} />
+        <Route path="task-search" element={<TaskSearchPage />} />
         <Route path="profile" element={<Profile />} />
         <Route path="users" element={<UserManagement />} />
       </Route>

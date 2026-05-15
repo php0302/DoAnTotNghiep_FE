@@ -2,20 +2,21 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, FolderKanban, CheckSquare,
-  Bell, User, LogOut, ChevronLeft, ChevronRight, Shield, BarChart3
+  Bell, User, LogOut, ChevronLeft, ChevronRight, Shield, BarChart3, Search
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Avatar from '../ui/Avatar';
 
 const NAV_ITEMS = [
-  { to: '/projects',  icon: FolderKanban,    label: 'Projects' },
-  { to: '/',          icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/my-tasks',  icon: CheckSquare,     label: 'My Tasks' },
-  { to: '/profile',   icon: User,            label: 'Profile' },
+  { to: '/projects', icon: FolderKanban, label: 'Projects' },
+  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/my-tasks', icon: CheckSquare, label: 'My Tasks' },
+  { to: '/task-search', icon: Search, label: 'Tìm kiếm Task' },
+  { to: '/profile', icon: User, label: 'Profile' },
 ];
 
 const ADMIN_NAV = [
-  { to: '/users',     icon: Shield,          label: 'Quản lý Thành viên' }
+  { to: '/users', icon: Shield, label: 'Quản lý Thành viên' }
 ];
 
 const Sidebar = () => {

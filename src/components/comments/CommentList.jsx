@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { commentService } from '../../services/commentService';
 import MentionInput from './MentionInput';
 import CommentItem from './CommentItem';
@@ -7,6 +7,7 @@ import { MessageCircle, Send } from 'lucide-react';
 
 /**
  * Hiển thị toàn bộ section comments của 1 task.
+ * Hỗ trợ realtime: tự động append comment mới từ user khác qua WebSocket.
  *
  * @param {number}  taskId      - ID task
  * @param {number}  projectId   - ID project (để gọi suggestMembers)
@@ -17,6 +18,7 @@ const CommentList = ({ taskId, projectId, currentUser }) => {
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading]       = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const commentsEndRef              = useRef(null);
 
   // ── Fetch comments khi mở ────────────────────────────────────────────────
   useEffect(() => {
@@ -27,6 +29,33 @@ const CommentList = ({ taskId, projectId, currentUser }) => {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [taskId]);
+
+  // ── Realtime: lắng nghe comment mới từ user khác ──────────────────────────
+  // useProjectRealtime phát CustomEvent 'ws:comment-created' khi nhận WS message
+  useEffect(() => {
+    if (!taskId) return;
+
+    const handleNewComment = (e) => {
+      const { comment, taskId: eventTaskId } = e.detail ?? {};
+      // Chỉ xử lý nếu comment thuộc task đang mở
+      if (Number(eventTaskId) !== Number(taskId)) return;
+      // Nếu là comment của chính mình → đã được optimistic update rồi, bỏ qua
+      if (comment?.author?.id === currentUser?.id) return;
+
+      setComments((prev) => {
+        // Chống duplicate
+        if (prev.some((c) => c.id === comment.id)) return prev;
+        return [...prev, comment];
+      });
+      // Scroll xuống comment mới
+      setTimeout(() => {
+        commentsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    };
+
+    window.addEventListener('ws:comment-created', handleNewComment);
+    return () => window.removeEventListener('ws:comment-created', handleNewComment);
+  }, [taskId, currentUser?.id]);
 
   // ── Tạo comment mới (Optimistic UI) ─────────────────────────────────────
   const handleSubmit = async (e) => {
@@ -104,6 +133,8 @@ const CommentList = ({ taskId, projectId, currentUser }) => {
               onDeleted={handleDeleted}
             />
           ))}
+          {/* Anchor để scroll tới khi có comment mới */}
+          <div ref={commentsEndRef} />
         </div>
       )}
 

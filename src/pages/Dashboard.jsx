@@ -25,6 +25,17 @@ const Dashboard = () => {
     taskService.getMyTasks()
       .then(({ data }) => setMyTasks(data?.data ?? []))
       .catch(() => {});
+
+    // Lắng nghe sự kiện realtime khi được thêm vào project mới hoặc project bị xoá
+    const handleNotification = (e) => {
+      const notif = e.detail;
+      if (notif?.type === 'PROJECT_ASSIGNED' || notif?.type === 'PROJECT_DELETED') {
+        console.log(`[Dashboard] Phát hiện event ${notif.type}, đang tải lại danh sách...`);
+        fetchProjects();
+      }
+    };
+    window.addEventListener('ws:notification', handleNotification);
+    return () => window.removeEventListener('ws:notification', handleNotification);
   }, [fetchProjects]);
 
   const totalTasks     = myTasks.length;
