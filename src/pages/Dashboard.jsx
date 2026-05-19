@@ -8,7 +8,7 @@ import CreateProjectModal from '../components/projects/CreateProjectModal';
 import EditProjectModal from '../components/projects/EditProjectModal';
 import ConfirmModal from '../components/ui/ConfirmModal';
 import Spinner from '../components/ui/Spinner';
-import { Plus, FolderKanban, CheckSquare, TrendingUp, Clock } from 'lucide-react';
+import { Plus, FolderKanban } from 'lucide-react';
 
 const Dashboard = () => {
   const { user }          = useAuth();
@@ -38,16 +38,6 @@ const Dashboard = () => {
     return () => window.removeEventListener('ws:notification', handleNotification);
   }, [fetchProjects]);
 
-  const totalTasks     = myTasks.length;
-  const doneTasks      = myTasks.filter((t) => t.status === 'DONE').length;
-  const inProgressTasks = myTasks.filter((t) => t.status === 'IN_PROGRESS').length;
-
-  const stats = [
-    { label: 'Dự án',          value: projects.length,  icon: FolderKanban, color: 'text-primary',  bg: 'bg-primary-light' },
-    { label: 'Tổng task',      value: totalTasks,        icon: CheckSquare,  color: 'text-teal',     bg: 'bg-teal/10' },
-    { label: 'Đang thực hiện', value: inProgressTasks,   icon: Clock,        color: 'text-orange-500', bg: 'bg-orange-50' },
-    { label: 'Hoàn thành',     value: doneTasks,         icon: TrendingUp,   color: 'text-success',  bg: 'bg-green-50' },
-  ];
 
   return (
     <div className="space-y-8">
@@ -57,21 +47,6 @@ const Dashboard = () => {
           Chào {user?.fullName || user?.username || 'bạn'} 👋
         </h2>
         <p className="text-warm-gray text-sm mt-1">Đây là tổng quan công việc của bạn hôm nay.</p>
-      </div>
-
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map(({ label, value, icon: Icon, color, bg }) => (
-          <div key={label} className="card p-5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold text-warm-gray uppercase tracking-wide">{label}</span>
-              <div className={`w-8 h-8 ${bg} rounded-lg flex items-center justify-center`}>
-                <Icon size={16} className={color} />
-              </div>
-            </div>
-            <p className="text-3xl font-bold text-gray-900" style={{ letterSpacing: '-1px' }}>{value}</p>
-          </div>
-        ))}
       </div>
 
       {/* Projects section */}

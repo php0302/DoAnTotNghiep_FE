@@ -4,7 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import AppLayout from './components/layout/AppLayout';
 import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
+import ChangePassword from './pages/auth/ChangePassword';
 import Dashboard from './pages/Dashboard';
 import ProjectDetail from './pages/projects/ProjectDetail';
 import MyTasks from './pages/tasks/MyTasks';
@@ -16,7 +16,10 @@ import StatisticDashboard from './pages/dashboard/StatisticDashboard';
 import DailyReport from './pages/reports/DailyReport';
 import Spinner from './components/ui/Spinner';
 
-/** Route yêu cầu đăng nhập */
+/**
+ * Route yêu cầu đăng nhập.
+ * Nếu user chưa đổi mật khẩu (mustChangePassword = true) → redirect /change-password.
+ */
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) {
@@ -26,7 +29,9 @@ const PrivateRoute = ({ children }) => {
       </div>
     );
   }
-  return user ? children : <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.mustChangePassword) return <Navigate to="/change-password" replace />;
+  return children;
 };
 
 /** Route chỉ dành cho chưa đăng nhập */
@@ -36,12 +41,31 @@ const GuestRoute = ({ children }) => {
   return user ? <Navigate to="/" replace /> : children;
 };
 
+/**
+ * Route đặc biệt cho trang đổi mật khẩu:
+ * - Phải đã đăng nhập
+ * - Nếu KHÔNG cần đổi mật khẩu → redirect về /
+ */
+const ChangePasswordRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-warm-white">
+      <Spinner size="lg" />
+    </div>
+  );
+  if (!user) return <Navigate to="/login" replace />;
+  if (!user.mustChangePassword) return <Navigate to="/" replace />;
+  return children;
+};
+
 function AppRoutes() {
   return (
     <Routes>
       {/* Guest routes */}
       <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
-      <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
+
+      {/* Trang đổi mật khẩu lần đầu (bắt buộc) */}
+      <Route path="/change-password" element={<ChangePasswordRoute><ChangePassword /></ChangePasswordRoute>} />
 
       {/* Protected routes */}
       <Route
@@ -59,7 +83,7 @@ function AppRoutes() {
         <Route path="reports/daily" element={<DailyReport />} />
       </Route>
 
-      {/* Fallback */}
+      {/* Fallback — /register bị xóa, redirect về / */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

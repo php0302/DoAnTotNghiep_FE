@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { FolderKanban, ArrowRight, AlertCircle } from 'lucide-react';
 
@@ -124,9 +124,7 @@ const Login = () => {
 
             <p className="text-center text-sm text-warm-gray mt-6">
               Chưa có tài khoản?{' '}
-              <Link to="/register" className="text-primary font-semibold hover:text-primary-hover">
-                Đăng ký ngay
-              </Link>
+              <span className="text-primary font-semibold">Liên hệ Admin để được cấp tài khoản.</span>
             </p>
           </div>
         </div>

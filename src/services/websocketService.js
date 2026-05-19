@@ -16,6 +16,10 @@ let isFirstConnect    = true;  // Phân biệt lần kết nối đầu vs recon
 // { [projectId]: StompSubscription }
 const projectSubscriptions = {};
 
+// Admin topic subscription
+let adminSubscription = null;
+let adminCallback     = null;
+
 // Callbacks khi reconnect thành công (để refetch data bị miss)
 const reconnectCallbacks = new Set();
 
@@ -71,6 +75,21 @@ const _createAndConnect = () => {
           _subscribeProjectInternal(Number(projectId), sub.callback);
         }
       });
+
+      // Re-subscribe admin topic nếu có
+      if (adminCallback) {
+        adminSubscription = stompClient.subscribe('/topic/admin', (message) => {
+          try {
+            const payload = JSON.parse(message.body);
+            adminCallback(payload);
+            // Phát lên window để bất kỳ component nào cũng có thể lắng nghe
+            window.dispatchEvent(new CustomEvent('ws:admin', { detail: payload }));
+          } catch (e) {
+            console.error('[WS] Admin message parse error', e);
+          }
+        });
+        console.log('[WS] Subscribed to /topic/admin');
+      }
 
       // Nếu là reconnect (không phải lần kết nối đầu), trigger refetch
       if (!isFirstConnect) {
@@ -179,9 +198,15 @@ export const disconnect = () => {
   onMessageCallback = null;
   reconnectAttempt  = 0;
   isFirstConnect    = true;
+  adminCallback     = null;
   if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
   // Clear tất cả project subscriptions
   Object.keys(projectSubscriptions).forEach(id => delete projectSubscriptions[id]);
+  // Clear admin subscription
+  if (adminSubscription) {
+    try { adminSubscription.unsubscribe(); } catch (e) { /* ignore */ }
+    adminSubscription = null;
+  }
   if (stompClient?.active) stompClient.deactivate();
   stompClient = null;
   console.log('[WS] Disconnected by user');
@@ -189,12 +214,48 @@ export const disconnect = () => {
 
 export const isConnected = () => stompClient?.active ?? false;
 
+/**
+ * Subscribe nhận realtime events từ /topic/admin.
+ * Dùng cho Admin Management để nhận sự kiện PASSWORD_CHANGED, v.v.
+ *
+ * @param {function} callback - callback(realtimeMessage)
+ */
+export const subscribeToAdmin = (callback) => {
+  adminCallback = callback;
+  if (stompClient?.active && stompClient?.connected) {
+    adminSubscription = stompClient.subscribe('/topic/admin', (message) => {
+      try {
+        const payload = JSON.parse(message.body);
+        adminCallback(payload);
+        window.dispatchEvent(new CustomEvent('ws:admin', { detail: payload }));
+      } catch (e) {
+        console.error('[WS] Admin message parse error', e);
+      }
+    });
+    console.log('[WS] Subscribed to /topic/admin');
+  }
+};
+
+/**
+ * Hủy subscribe /topic/admin.
+ */
+export const unsubscribeFromAdmin = () => {
+  adminCallback = null;
+  if (adminSubscription) {
+    try { adminSubscription.unsubscribe(); } catch (e) { /* ignore */ }
+    adminSubscription = null;
+  }
+  console.log('[WS] Unsubscribed from /topic/admin');
+};
+
 const websocketService = {
   connect,
   disconnect,
   isConnected,
   subscribeToProject,
   unsubscribeFromProject,
+  subscribeToAdmin,
+  unsubscribeFromAdmin,
   onReconnect,
 };
 export default websocketService;

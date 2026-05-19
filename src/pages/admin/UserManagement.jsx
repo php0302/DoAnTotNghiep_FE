@@ -2,24 +2,39 @@ import React, { useEffect, useState } from 'react';
 import { userService } from '../../services/userService';
 import { roleService } from '../../services/roleService';
 import { useAuth } from '../../context/AuthContext';
+import websocketService from '../../services/websocketService';
 import Card from '../../components/ui/Card';
 import Avatar from '../../components/ui/Avatar';
 import Spinner from '../../components/ui/Spinner';
-import { Mail, Shield, Clock, Edit2, Save, X } from 'lucide-react';
+import {
+  Mail, Shield, Clock, Edit2, Save, X, Trash2,
+  UserPlus, KeyRound, Eye, EyeOff, AlertCircle, CheckCircle2, AlertTriangle,
+} from 'lucide-react';
 
 const UserManagement = () => {
   const { user } = useAuth();
-  const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState([]);
+  const [users, setUsers]   = useState([]);
+  const [roles, setRoles]   = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError]   = useState(null);
 
-  // Modal edit user
-  const [editingUser, setEditingUser] = useState(null);
-  const [editForm, setEditForm] = useState({ fullName: '', email: '' });
-  const [savingUser, setSavingUser] = useState(false);
+  // ── Modal tạo tài khoản ──
+  const [showCreate, setShowCreate]     = useState(false);
+  const [createForm, setCreateForm]     = useState({ username: '', email: '', password: '', roleId: '' });
+  const [showCreatePwd, setShowCreatePwd] = useState(false);
+  const [createError, setCreateError]   = useState('');
+  const [creating, setCreating]         = useState(false);
+  const [createSuccess, setCreateSuccess] = useState(false);
 
-  // Chỉ cho admin vào trang này
+  // ── Modal sửa thông tin ──
+  const [editingUser, setEditingUser]   = useState(null);
+  const [editForm, setEditForm]         = useState({ fullName: '', email: '' });
+  const [savingUser, setSavingUser]     = useState(false);
+
+  // ── Modal xóa tài khoản ──
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [isDeleting, setIsDeleting]     = useState(false);
+
   const isAdmin = ['ADMIN', 'ROLE_ADMIN'].includes(user?.role);
 
   const loadData = async () => {
@@ -45,13 +60,77 @@ const UserManagement = () => {
     }
   }, [isAdmin]);
 
+  // ── Subscribe realtime /topic/admin để nhận sự kiện PASSWORD_CHANGED ──
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    websocketService.subscribeToAdmin((msg) => {
+      if (msg.type === 'PASSWORD_CHANGED' && msg.data?.userId) {
+        const changedUserId = Number(msg.data.userId);
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === changedUserId
+              ? { ...u, mustChangePassword: false }
+              : u
+          )
+        );
+      } else if (msg.type === 'USER_DEACTIVATED' && msg.data?.userId) {
+        const deactivatedUserId = Number(msg.data.userId);
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === deactivatedUserId
+              ? { ...u, isActive: false }
+              : u
+          )
+        );
+      }
+    });
+
+    return () => websocketService.unsubscribeFromAdmin();
+  }, [isAdmin]);
+
+  // ── Xử lý tạo tài khoản ──
+  const handleOpenCreate = () => {
+    setCreateForm({ username: '', email: '', password: '', roleId: roles[0]?.id ?? '' });
+    setCreateError('');
+    setCreateSuccess(false);
+    setShowCreate(true);
+  };
+
+  const handleCreateSubmit = async (e) => {
+    e.preventDefault();
+    setCreateError('');
+    if (!createForm.roleId) {
+      setCreateError('Vui lòng chọn chức vụ cho nhân viên.');
+      return;
+    }
+    setCreating(true);
+    try {
+      const res = await userService.createUser({
+        username: createForm.username.trim(),
+        email:    createForm.email.trim(),
+        password: createForm.password,
+        roleId:   Number(createForm.roleId),
+      });
+      const newUser = res.data?.data;
+      setUsers((prev) => [...prev, newUser]);
+      setCreateSuccess(true);
+      setTimeout(() => setShowCreate(false), 1500);
+    } catch (err) {
+      setCreateError(err?.response?.data?.message ?? 'Tạo tài khoản thất bại. Vui lòng thử lại.');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  // ── Xử lý đổi role ──
   const handleRoleChange = async (userId, newRoleId) => {
     try {
       await userService.updateRole(userId, Number(newRoleId));
-      setUsers(prev =>
-        prev.map(u => {
+      setUsers((prev) =>
+        prev.map((u) => {
           if (u.id === userId) {
-            const newRole = roles.find(r => r.id === Number(newRoleId));
+            const newRole = roles.find((r) => r.id === Number(newRoleId));
             return { ...u, roleId: Number(newRoleId), role: newRole?.name };
           }
           return u;
@@ -62,6 +141,7 @@ const UserManagement = () => {
     }
   };
 
+  // ── Xử lý sửa thông tin ──
   const handleEditClick = (u) => {
     setEditingUser(u.id);
     setEditForm({ fullName: u.fullName || u.username, email: u.email });
@@ -71,7 +151,7 @@ const UserManagement = () => {
     setSavingUser(true);
     try {
       await userService.updateUserProfile(userId, editForm);
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, ...editForm } : u));
+      setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, ...editForm } : u)));
       setEditingUser(null);
     } catch (err) {
       alert(err?.response?.data?.message || 'Có lỗi xảy ra khi cập nhật.');
@@ -80,40 +160,76 @@ const UserManagement = () => {
     }
   };
 
+  // ── Xử lý xóa (khóa) tài khoản ──
+  const handleDeleteConfirm = async () => {
+    if (!userToDelete) return;
+    setIsDeleting(true);
+    try {
+      await userService.deleteUser(userToDelete.id);
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userToDelete.id ? { ...u, isActive: false } : u))
+      );
+      setUserToDelete(null);
+    } catch (err) {
+      alert(err?.response?.data?.message || 'Lỗi khi vô hiệu hóa tài khoản.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   if (loading) return <div className="flex justify-center p-10"><Spinner size="lg" /></div>;
-  if (error) return <div className="p-10 text-center text-danger">{error}</div>;
+  if (error)   return <div className="p-10 text-center text-danger">{error}</div>;
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>Quản lý Thành viên</h2>
-        <p className="text-warm-gray text-sm mt-1">Quản lý tài khoản và phân quyền cho hệ thống.</p>
+      {/* ── Header ── */}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>
+            Quản lý Thành viên
+          </h2>
+          <p className="text-warm-gray text-sm mt-1">
+            Quản lý tài khoản và phân quyền cho hệ thống.
+          </p>
+        </div>
+        <button
+          id="btn-create-user"
+          onClick={handleOpenCreate}
+          className="btn-primary flex-shrink-0"
+        >
+          <UserPlus size={16} />
+          Tạo tài khoản
+        </button>
       </div>
 
+      {/* ── Danh sách user ── */}
       <Card className="overflow-hidden">
         <ul className="divide-y divide-black/5">
           {users.map((u) => (
-            <li key={u.id} className="p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between hover:bg-black/[0.01] transition-colors">
+            <li
+              key={u.id}
+              className="p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between hover:bg-black/[0.01] transition-colors"
+            >
               {editingUser === u.id ? (
                 // EDIT MODE
                 <div className="flex-1 w-full space-y-3">
                   <div className="flex flex-col sm:flex-row gap-3">
                     <div className="flex-1">
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Tên hiển thị</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         className="input-field text-sm py-1.5"
                         value={editForm.fullName}
-                        onChange={(e) => setEditForm({...editForm, fullName: e.target.value})}
+                        onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
                       />
                     </div>
                     <div className="flex-1">
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Email</label>
-                      <input 
-                        type="email" 
+                      <input
+                        type="email"
                         className="input-field text-sm py-1.5"
                         value={editForm.email}
-                        onChange={(e) => setEditForm({...editForm, email: e.target.value})}
+                        onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
                       />
                     </div>
                   </div>
@@ -134,11 +250,23 @@ const UserManagement = () => {
                     <div className="min-w-0 flex-1">
                       <h4 className="text-sm font-bold text-gray-900 truncate flex items-center gap-2">
                         {u.fullName || u.username}
-                        {!u.isActive && <span className="badge-red text-[10px] uppercase font-bold py-0.5 px-1.5">Bị khóa</span>}
+                        {!u.isActive && (
+                          <span className="badge-red text-[10px] uppercase font-bold py-0.5 px-1.5">Bị khóa</span>
+                        )}
+                        {u.mustChangePassword && (
+                          <span
+                            title="Chưa đổi mật khẩu lần đầu"
+                            className="inline-flex items-center gap-1 text-[10px] font-bold py-0.5 px-1.5 rounded bg-amber-100 text-amber-700 border border-amber-300"
+                          >
+                            <KeyRound size={10} /> Chờ đổi MK
+                          </span>
+                        )}
                       </h4>
                       <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-warm-muted">
                         <span className="flex items-center gap-1"><Mail size={12} /> {u.email}</span>
-                        <span className="flex items-center gap-1"><Clock size={12} /> Gia nhập: {new Date(u.createdAt).toLocaleDateString('vi-VN')}</span>
+                        <span className="flex items-center gap-1">
+                          <Clock size={12} /> Gia nhập: {new Date(u.createdAt).toLocaleDateString('vi-VN')}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -149,20 +277,30 @@ const UserManagement = () => {
                       value={u.roleId || ''}
                       onChange={(e) => handleRoleChange(u.id, e.target.value)}
                       className="input-field py-1.5 text-sm font-medium pr-8 w-full sm:w-auto bg-gray-50 focus:bg-white cursor-pointer"
-                      disabled={u.id === user.id} // Không tự sửa quyền chính mình
+                      disabled={u.id === user.id}
                     >
-                      {roles.map(role => (
+                      {roles.map((role) => (
                         <option key={role.id} value={role.id}>{role.name}</option>
                       ))}
                     </select>
-                    
-                    <button 
+
+                    <button
                       onClick={() => handleEditClick(u)}
                       className="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-md transition-colors ml-1"
                       title="Sửa thông tin"
+                      disabled={!u.isActive}
                     >
                       <Edit2 size={15} />
                     </button>
+                    {u.id !== user.id && u.isActive && (
+                      <button
+                        onClick={() => setUserToDelete(u)}
+                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors ml-1"
+                        title="Vô hiệu hóa"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    )}
                   </div>
                 </>
               )}
@@ -170,6 +308,189 @@ const UserManagement = () => {
           ))}
         </ul>
       </Card>
+
+      {/* ══════════════ MODAL TẠO TÀI KHOẢN ══════════════ */}
+      {showCreate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-black/10 animate-slide-up">
+            {/* Modal header */}
+            <div className="flex items-center justify-between p-6 border-b border-black/5">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center">
+                  <UserPlus size={18} className="text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-gray-900">Tạo tài khoản nhân viên</h3>
+                  <p className="text-xs text-warm-gray mt-0.5">Nhân viên sẽ đổi mật khẩu khi đăng nhập lần đầu.</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowCreate(false)}
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal body */}
+            <form onSubmit={handleCreateSubmit} className="p-6 space-y-4">
+              {/* Error */}
+              {createError && (
+                <div className="flex items-start gap-2 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3">
+                  <AlertCircle size={15} className="flex-shrink-0 mt-0.5" />
+                  {createError}
+                </div>
+              )}
+
+              {/* Success */}
+              {createSuccess && (
+                <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3">
+                  <CheckCircle2 size={15} />
+                  Tạo tài khoản thành công!
+                </div>
+              )}
+
+              {/* Username */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                  Tên đăng nhập *
+                </label>
+                <input
+                  id="create-username"
+                  type="text"
+                  className="input-field"
+                  value={createForm.username}
+                  onChange={(e) => setCreateForm({ ...createForm, username: e.target.value })}
+                  placeholder="Ít nhất 3 ký tự..."
+                  autoFocus
+                  required
+                  minLength={3}
+                />
+              </div>
+
+              {/* Email */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                  Email *
+                </label>
+                <input
+                  id="create-email"
+                  type="email"
+                  className="input-field"
+                  value={createForm.email}
+                  onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
+                  placeholder="email@example.com"
+                  required
+                />
+              </div>
+
+              {/* Password tạm thời */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                  Mật khẩu tạm thời *
+                </label>
+                <div className="relative">
+                  <input
+                    id="create-password"
+                    type={showCreatePwd ? 'text' : 'password'}
+                    className="input-field pr-10"
+                    value={createForm.password}
+                    onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
+                    placeholder="Ít nhất 6 ký tự..."
+                    required
+                    minLength={6}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCreatePwd(!showCreatePwd)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showCreatePwd ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+                <p className="text-xs text-warm-muted">Nhân viên sẽ phải đổi mật khẩu này khi đăng nhập lần đầu.</p>
+              </div>
+
+              {/* Role — bắt buộc chọn */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                  Chức vụ *
+                </label>
+                <select
+                  id="create-role"
+                  className="input-field cursor-pointer"
+                  value={createForm.roleId}
+                  onChange={(e) => setCreateForm({ ...createForm, roleId: e.target.value })}
+                  required
+                >
+                  <option value="" disabled>-- Chọn chức vụ --</option>
+                  {roles.map((r) => (
+                    <option key={r.id} value={r.id}>{r.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  id="create-user-submit"
+                  type="submit"
+                  className="btn-primary flex-1 py-2.5"
+                  disabled={creating || createSuccess}
+                >
+                  <UserPlus size={15} />
+                  {creating ? 'Đang tạo...' : 'Tạo tài khoản'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCreate(false)}
+                  className="btn-secondary py-2.5 px-4"
+                >
+                  Hủy
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════ MODAL XÓA TÀI KHOẢN ══════════════ */}
+      {userToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm border border-black/10 animate-slide-up p-6">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <AlertTriangle className="text-red-600" size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Vô hiệu hóa tài khoản?</h3>
+                <p className="text-sm text-gray-500">
+                  Bạn có chắc muốn vô hiệu hóa <span className="font-semibold text-gray-900">{userToDelete.fullName || userToDelete.username}</span>?
+                  Tài khoản này sẽ không thể đăng nhập được nữa.
+                </p>
+              </div>
+              <div className="flex w-full gap-3 pt-2">
+                <button
+                  onClick={() => setUserToDelete(null)}
+                  className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition-colors"
+                  disabled={isDeleting}
+                >
+                  Hủy
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? <Spinner size="sm" className="text-white" /> : <Trash2 size={16} />}
+                  <span>{isDeleting ? 'Đang khóa...' : 'Xác nhận'}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

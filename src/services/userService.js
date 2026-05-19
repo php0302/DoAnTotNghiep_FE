@@ -7,4 +7,13 @@ export const userService = {
   updateRole: (id, roleId)   => apiClient.put(`/users/${id}/role`, { roleId }),
   updateMyProfile: (data)    => apiClient.put('/users/me', data),
   updateUserProfile: (id, data) => apiClient.put(`/users/${id}`, data),
+
+  /** Admin tạo tài khoản nhân viên */
+  createUser: (data)         => apiClient.post('/users', data),
+
+  /** Đổi mật khẩu (kể cả lần đầu bắt buộc) */
+  changePassword: (data)     => apiClient.put('/users/me/password', data),
+
+  /** Xóa/Khóa tài khoản */
+  deleteUser: (id)           => apiClient.delete(`/users/${id}`),
 };
