@@ -9,7 +9,9 @@ export const authService = {
     const { data } = await apiClient.post('/auth/login', { usernameOrEmail, password });
     // TokenResponse trả về: { accessToken, refreshToken, tokenType }
     const token = data?.data?.accessToken;
+    const refreshToken = data?.data?.refreshToken;
     if (token) localStorage.setItem('token', token);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     return data;
   },
 
@@ -23,5 +25,8 @@ export const authService = {
     return data;
   },
 
-  logout: () => localStorage.removeItem('token'),
+  logout: () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+  },
 };

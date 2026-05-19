@@ -2,22 +2,24 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, FolderKanban, CheckSquare,
-  Bell, User, LogOut, ChevronLeft, ChevronRight, Shield, BarChart3, Search
+  Bell, User, LogOut, ChevronLeft, ChevronRight, Shield, BarChart3, Search, Briefcase
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Avatar from '../ui/Avatar';
 
 const NAV_ITEMS = [
-  { to: '/projects', icon: FolderKanban, label: 'Projects' },
-  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/my-tasks', icon: CheckSquare, label: 'My Tasks' },
-  { to: '/task-search', icon: Search, label: 'Tìm kiếm Task' },
-  { to: '/profile', icon: User, label: 'Profile' },
+  { to: '/', icon: LayoutDashboard, label: 'Tổng quan' },
+  { to: '/projects', icon: FolderKanban, label: 'Dự án' },
+  { to: '/my-tasks', icon: CheckSquare, label: 'Công việc của tôi' },
+  { to: '/task-search', icon: Search, label: 'Tìm kiếm công việc' },
+  { to: '/profile', icon: User, label: 'Hồ sơ cá nhân' },
 ];
 
 const ADMIN_NAV = [
-  { to: '/users', icon: Shield, label: 'Quản lý Thành viên' }
+  { to: '/users', icon: Shield, label: 'Quản lý Thành viên' },
+  { to: '/admin/roles', icon: Briefcase, label: 'Quản lý Chức vụ' },
 ];
+
 
 const Sidebar = () => {
   const { user, logout } = useAuth();
@@ -56,7 +58,7 @@ const Sidebar = () => {
       <nav className="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto">
         {NAV_ITEMS.map(({ to, icon: Icon, label }) => {
           // Hide Dashboard for regular members
-          if (label === 'Dashboard' && user && ['MEMBER', 'ROLE_MEMBER'].includes(user.role)) {
+          if (to === '/' && user && ['MEMBER', 'ROLE_MEMBER'].includes(user.role)) {
             return null;
           }
           return (

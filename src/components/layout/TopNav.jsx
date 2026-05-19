@@ -5,7 +5,7 @@ import { useNotifications } from '../../context/NotificationContext';
 import Avatar from '../ui/Avatar';
 import NotificationDropdown from '../notifications/NotificationDropdown';
 
-const TopNav = ({ title = 'Dashboard' }) => {
+const TopNav = ({ title = 'Tổng quan' }) => {
   const { user } = useAuth();
   const { notifications, unreadCount, markRead, markAllRead } = useNotifications();
   const [notifOpen, setNotifOpen] = useState(false);

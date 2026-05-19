@@ -26,7 +26,10 @@ const ProjectCard = ({ project, onDelete, onEdit, canManage = false }) => {
   const fmt = (d) => d ? new Date(d).toLocaleDateString('vi-VN') : null;
 
   return (
-    <div className="card p-5 flex flex-col gap-4 group">
+    <div 
+      className="card p-5 flex flex-col gap-4 group cursor-pointer hover:shadow-md transition-all"
+      onClick={() => navigate(`/projects/${id}`)}
+    >
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">

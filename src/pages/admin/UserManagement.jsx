@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { userService } from '../../services/userService';
+import { roleService } from '../../services/roleService';
 import { useAuth } from '../../context/AuthContext';
 import Card from '../../components/ui/Card';
 import Avatar from '../../components/ui/Avatar';
@@ -9,38 +10,48 @@ import { Mail, Shield, Clock } from 'lucide-react';
 const UserManagement = () => {
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Chỉ cho admin vào trang này
   const isAdmin = ['ADMIN', 'ROLE_ADMIN'].includes(user?.role);
 
-  const loadUsers = async () => {
+  const loadData = async () => {
     try {
-      const { data } = await userService.getAll();
-      setUsers(data?.data || []);
+      const [usersRes, rolesRes] = await Promise.all([
+        userService.getAll(),
+        roleService.getAll(),
+      ]);
+      setUsers(usersRes.data?.data || []);
+      setRoles(rolesRes.data?.data || []);
     } catch (err) {
-      setError('Lỗi tải danh sách tài khoản');
+      setError('Lỗi tải dữ liệu');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (isAdmin) loadUsers();
+    if (isAdmin) loadData();
     else {
       setLoading(false);
       setError('Bạn không có quyền truy cập trang này');
     }
   }, [isAdmin]);
 
-  const handleRoleChange = async (userId, newRole) => {
+  const handleRoleChange = async (userId, newRoleId) => {
     try {
-      await userService.updateRole(userId, newRole);
-      setUsers((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
+      await userService.updateRole(userId, Number(newRoleId));
+      setUsers(prev =>
+        prev.map(u => {
+          if (u.id === userId) {
+            const newRole = roles.find(r => r.id === Number(newRoleId));
+            return { ...u, roleId: Number(newRoleId), role: newRole?.name };
+          }
+          return u;
+        })
       );
-      // TODO: Thêm toast notification thành công ở đây nếu muốn
     } catch (err) {
       alert(err?.response?.data?.message ?? 'Cập nhật thất bại');
     }
@@ -74,18 +85,18 @@ const UserManagement = () => {
                 </div>
               </div>
 
-              {/* Thay đổi quyền */}
+              {/* Thay đổi chức vụ — dropdown lấy từ API */}
               <div className="flex-shrink-0 flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
                 <Shield size={14} className="text-primary hidden sm:block" />
                 <select
-                  value={u.role.replace('ROLE_', '')}
+                  value={u.roleId || ''}
                   onChange={(e) => handleRoleChange(u.id, e.target.value)}
                   className="input-field py-1.5 text-sm font-medium pr-8 w-full sm:w-auto bg-gray-50 focus:bg-white cursor-pointer"
-                  disabled={u.id === user.id} // Không tự sửa quyền chính mình để an toàn
+                  disabled={u.id === user.id} // Không tự sửa quyền chính mình
                 >
-                  <option value="ADMIN">Quản trị viên (Admin)</option>
-                  <option value="PROJECT_MANAGER">Quản lý Dự án (PM)</option>
-                  <option value="MEMBER">Nhân viên (Member)</option>
+                  {roles.map(role => (
+                    <option key={role.id} value={role.id}>{role.name}</option>
+                  ))}
                 </select>
               </div>
             </li>

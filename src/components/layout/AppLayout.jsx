@@ -5,10 +5,13 @@ import TopNav from './TopNav';
 
 // Mapping route → tiêu đề hiển thị
 const TITLES = {
-  '/':          'Dashboard',
-  '/projects':  'Projects',
-  '/my-tasks':  'My Tasks',
-  '/profile':   'Profile',
+  '/':              'Tổng quan',
+  '/projects':      'Dự án',
+  '/my-tasks':      'Công việc của tôi',
+  '/profile':       'Hồ sơ cá nhân',
+  '/task-search':   'Tìm kiếm công việc',
+  '/users':         'Quản lý Thành viên',
+  '/admin/roles':   'Quản lý Chức vụ',
 };
 
 const AppLayout = () => {

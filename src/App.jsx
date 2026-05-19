@@ -11,6 +11,7 @@ import MyTasks from './pages/tasks/MyTasks';
 import TaskSearchPage from './pages/tasks/TaskSearchPage';
 import Profile from './pages/profile/Profile';
 import UserManagement from './pages/admin/UserManagement';
+import RoleManagement from './pages/admin/RoleManagement';
 import StatisticDashboard from './pages/dashboard/StatisticDashboard';
 import Spinner from './components/ui/Spinner';
 
@@ -53,6 +54,7 @@ function AppRoutes() {
         <Route path="task-search" element={<TaskSearchPage />} />
         <Route path="profile" element={<Profile />} />
         <Route path="users" element={<UserManagement />} />
+        <Route path="admin/roles" element={<RoleManagement />} />
       </Route>
 
       {/* Fallback */}
