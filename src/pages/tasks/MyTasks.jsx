@@ -6,38 +6,38 @@ import Avatar from '../../components/ui/Avatar';
 import Spinner from '../../components/ui/Spinner';
 import { Calendar, Flag, CheckSquare, AlertCircle } from 'lucide-react';
 
-const PRIORITY_BADGE  = { HIGH: 'badge-warn', MEDIUM: 'badge-blue', LOW: 'badge-gray' };
-const STATUS_BADGE    = { TODO: 'badge-gray', IN_PROGRESS: 'badge-blue', DONE: 'badge-green' };
+const PRIORITY_BADGE = { HIGH: 'badge-warn', MEDIUM: 'badge-blue', LOW: 'badge-gray' };
+const STATUS_BADGE = { TODO: 'badge-gray', IN_PROGRESS: 'badge-blue', DONE: 'badge-green' };
 const PRIORITY_LABELS = { LOW: 'Thấp', MEDIUM: 'Trung bình', HIGH: 'Cao' };
-const STATUS_LABELS   = { TODO: 'Cần làm', IN_PROGRESS: 'Đang làm', DONE: 'Hoàn thành' };
+const STATUS_LABELS = { TODO: 'Cần làm', IN_PROGRESS: 'Đang làm', DONE: 'Hoàn thành' };
 
 const MyTasks = () => {
-  const { user }      = useAuth();
-  const [tasks, setTasks]     = useState([]);
+  const { user } = useAuth();
+  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter]   = useState('ALL'); // ALL | TODO | IN_PROGRESS | DONE
+  const [filter, setFilter] = useState('ALL'); // ALL | TODO | IN_PROGRESS | DONE
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     taskService.getMyTasks()
       .then(({ data }) => setTasks(data?.data ?? []))
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
 
   const filtered = filter === 'ALL' ? tasks : tasks.filter((t) => t.status === filter);
 
   const FILTERS = [
-    { key: 'ALL',         label: 'Tất cả' },
-    { key: 'TODO',        label: 'Cần làm' },
+    { key: 'ALL', label: 'Tất cả' },
+    { key: 'TODO', label: 'Cần làm' },
     { key: 'IN_PROGRESS', label: 'Đang làm' },
-    { key: 'DONE',        label: 'Hoàn thành' },
+    { key: 'DONE', label: 'Hoàn thành' },
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>My Tasks</h2>
+        <h2 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>Tasks của tôi</h2>
         <p className="text-warm-gray text-sm mt-1">Tổng cộng {tasks.length} task được giao cho bạn</p>
       </div>
 
@@ -84,7 +84,7 @@ const MyTasks = () => {
                 <div className={`w-2 h-8 rounded-full flex-shrink-0
                   ${task.status === 'DONE' ? 'bg-success'
                     : task.status === 'IN_PROGRESS' ? 'bg-primary'
-                    : 'bg-warm-muted'}`}
+                      : 'bg-warm-muted'}`}
                 />
 
                 {/* Title + project */}

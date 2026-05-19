@@ -5,5 +5,6 @@ export const userService = {
   getAll:     ()             => apiClient.get('/users'),
   getById:    (id)           => apiClient.get(`/users/${id}`),
   updateRole: (id, roleId)   => apiClient.put(`/users/${id}/role`, { roleId }),
+  updateMyProfile: (data)    => apiClient.put('/users/me', data),
+  updateUserProfile: (id, data) => apiClient.put(`/users/${id}`, data),
 };
-

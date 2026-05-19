@@ -13,6 +13,7 @@ import Profile from './pages/profile/Profile';
 import UserManagement from './pages/admin/UserManagement';
 import RoleManagement from './pages/admin/RoleManagement';
 import StatisticDashboard from './pages/dashboard/StatisticDashboard';
+import DailyReport from './pages/reports/DailyReport';
 import Spinner from './components/ui/Spinner';
 
 /** Route yêu cầu đăng nhập */
@@ -55,6 +56,7 @@ function AppRoutes() {
         <Route path="profile" element={<Profile />} />
         <Route path="users" element={<UserManagement />} />
         <Route path="admin/roles" element={<RoleManagement />} />
+        <Route path="reports/daily" element={<DailyReport />} />
       </Route>
 
       {/* Fallback */}

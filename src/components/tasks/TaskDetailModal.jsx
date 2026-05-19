@@ -2,7 +2,8 @@ import React from 'react';
 import Modal from '../ui/Modal';
 import Avatar from '../ui/Avatar';
 import CommentList from '../comments/CommentList';
-import { Calendar, Flag, User, Edit2, Trash2 } from 'lucide-react';
+import WorkLogList from '../worklogs/WorkLogList';
+import { Calendar, Flag, User, Edit2, Trash2, MessageSquare, Clock } from 'lucide-react';
 
 const PRIORITY_BADGE  = { HIGH: 'badge-warn', MEDIUM: 'badge-blue', LOW: 'badge-gray' };
 const STATUS_BADGE    = { TODO: 'badge-gray', IN_PROGRESS: 'badge-blue', DONE: 'badge-green' };
@@ -26,6 +27,8 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
   const isAdminOrManager = ['ADMIN', 'ROLE_ADMIN', 'PROJECT_MANAGER', 'ROLE_PROJECT_MANAGER']
     .includes(currentUser?.role);
 
+  const [activeTab, setActiveTab] = React.useState('comments');
+
   return (
     <Modal open={open} onClose={onClose} title={task.title} size="xl">
       <div className="flex gap-6">
@@ -43,12 +46,42 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
             </p>
           </div>
 
-          {/* Comments */}
-          <CommentList
-            taskId={task.id}
-            projectId={projectId || task.projectId}
-            currentUser={currentUser}
-          />
+          {/* Tabs: Bình luận & Thời gian */}
+          <div className="border-b border-black/10 flex gap-4">
+            <button
+              onClick={() => setActiveTab('comments')}
+              className={`pb-2 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+                activeTab === 'comments' ? 'border-primary text-primary' : 'border-transparent text-warm-gray hover:text-gray-800'
+              }`}
+            >
+              <MessageSquare size={16} /> Bình luận
+            </button>
+            <button
+              onClick={() => setActiveTab('worklogs')}
+              className={`pb-2 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+                activeTab === 'worklogs' ? 'border-primary text-primary' : 'border-transparent text-warm-gray hover:text-gray-800'
+              }`}
+            >
+              <Clock size={16} /> Ghi nhận thời gian
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          <div className="min-h-[200px]">
+            {activeTab === 'comments' && (
+              <CommentList
+                taskId={task.id}
+                projectId={projectId || task.projectId}
+                currentUser={currentUser}
+              />
+            )}
+            {activeTab === 'worklogs' && (
+              <WorkLogList
+                taskId={task.id}
+                currentUser={currentUser}
+              />
+            )}
+          </div>
         </div>
 
         {/* ── Cột phải: metadata + actions ── */}

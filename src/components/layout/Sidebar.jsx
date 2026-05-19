@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, FolderKanban, CheckSquare,
-  Bell, User, LogOut, ChevronLeft, ChevronRight, Shield, BarChart3, Search, Briefcase
+  Bell, User, LogOut, ChevronLeft, ChevronRight, Shield, BarChart3, Search, Briefcase, Clock
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Avatar from '../ui/Avatar';
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { to: '/projects', icon: FolderKanban, label: 'Dự án' },
   { to: '/my-tasks', icon: CheckSquare, label: 'Công việc của tôi' },
   { to: '/task-search', icon: Search, label: 'Tìm kiếm công việc' },
+  { to: '/reports/daily', icon: Clock, label: 'Báo cáo hằng ngày' },
   { to: '/profile', icon: User, label: 'Hồ sơ cá nhân' },
 ];
 
