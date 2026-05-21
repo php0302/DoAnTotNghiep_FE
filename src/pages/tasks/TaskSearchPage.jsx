@@ -248,7 +248,7 @@ const TaskSearchPage = () => {
         <TaskDetailModal
           open={!!selectedTask}
           onClose={() => setSelectedTask(null)}
-          task={selectedTask}
+          task={result.content.find((t) => t.id === selectedTask.id) || selectedTask}
           currentUser={user}
         />
       )}

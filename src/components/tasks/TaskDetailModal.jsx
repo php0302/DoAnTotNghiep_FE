@@ -77,7 +77,7 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
             )}
             {activeTab === 'worklogs' && (
               <WorkLogList
-                taskId={task.id}
+                task={task}
                 currentUser={currentUser}
               />
             )}
@@ -99,11 +99,11 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
           </MetaRow>
 
           <MetaRow icon={<User size={14} />} label="Được giao cho">
-            {task.assignee ? (
+            {task.assignedToName ? (
               <div className="flex items-center gap-1.5">
-                <Avatar name={task.assignee.fullName || task.assignee.username} size="xs" />
+                <Avatar name={task.assignedToName} size="xs" />
                 <span className="text-sm text-gray-800 truncate">
-                  {task.assignee.fullName || task.assignee.username}
+                  {task.assignedToName}
                 </span>
               </div>
             ) : (

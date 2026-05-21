@@ -21,7 +21,7 @@ const PRIORITY_LABEL = {
  * @param {boolean} canDrag - Người dùng hiện tại có quyền kéo task này không
  */
 const TaskCard = ({ task, index, onClick, canDrag = false }) => {
-  const { id, title, priority, deadline, assignee } = task;
+  const { id, title, priority, deadline, assignedToName } = task;
 
   const isOverdue = deadline && new Date(deadline) < new Date();
 
@@ -67,8 +67,8 @@ const TaskCard = ({ task, index, onClick, canDrag = false }) => {
               <span />
             )}
 
-            {assignee ? (
-              <Avatar name={assignee.fullName || assignee.username} size="xs" />
+            {assignedToName ? (
+              <Avatar name={assignedToName} size="xs" />
             ) : (
               <User size={14} className="text-warm-muted" />
             )}

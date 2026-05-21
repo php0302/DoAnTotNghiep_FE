@@ -6,6 +6,8 @@ import Avatar from '../../components/ui/Avatar';
 import Spinner from '../../components/ui/Spinner';
 import { Calendar, Flag, CheckSquare, AlertCircle } from 'lucide-react';
 
+import websocketService from '../../services/websocketService';
+
 const PRIORITY_BADGE = { HIGH: 'badge-warn', MEDIUM: 'badge-blue', LOW: 'badge-gray' };
 const STATUS_BADGE = { TODO: 'badge-gray', IN_PROGRESS: 'badge-blue', DONE: 'badge-green' };
 const PRIORITY_LABELS = { LOW: 'Thấp', MEDIUM: 'Trung bình', HIGH: 'Cao' };
@@ -24,6 +26,38 @@ const MyTasks = () => {
       .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    const projectIds = [...new Set(tasks.map((t) => t.projectId).filter(Boolean))];
+    if (projectIds.length === 0) return;
+
+    const handleRealtimeMessage = (msg) => {
+      if (!msg?.type) return;
+      if (msg.type === 'TASK_STATUS_CHANGED' && msg.data?.id) {
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === msg.data.id ? { ...t, status: msg.data.status } : t
+          )
+        );
+      } else if (msg.type === 'TASK_UPDATED' && msg.data?.id) {
+        setTasks((prev) =>
+          prev.map((t) => (t.id === msg.data.id ? { ...t, ...msg.data } : t))
+        );
+      } else if (msg.type === 'TASK_DELETED' && msg.data?.taskId) {
+        setTasks((prev) => prev.filter((t) => t.id !== msg.data.taskId));
+      }
+    };
+
+    projectIds.forEach((pid) => {
+      websocketService.subscribeToProject(pid, handleRealtimeMessage);
+    });
+
+    return () => {
+      projectIds.forEach((pid) => {
+        websocketService.unsubscribeFromProject(pid, handleRealtimeMessage);
+      });
+    };
+  }, [tasks.map(t => t.projectId).filter(Boolean).sort().join(',')]);
 
   const filtered = filter === 'ALL' ? tasks : tasks.filter((t) => t.status === filter);
 
@@ -125,7 +159,7 @@ const MyTasks = () => {
         <TaskDetailModal
           open={!!selected}
           onClose={() => setSelected(null)}
-          task={selected}
+          task={tasks.find((t) => t.id === selected.id) || selected}
           currentUser={user}
         />
       )}

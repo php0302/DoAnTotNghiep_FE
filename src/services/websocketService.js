@@ -12,6 +12,10 @@ let onMessageCallback = null;  // Callback cho /user/queue/notifications
 let currentToken      = null;
 let isFirstConnect    = true;  // Phân biệt lần kết nối đầu vs reconnect
 
+// Map lưu callbacks cho từng project
+// { [projectId]: Set<callback> }
+const projectCallbacks = {};
+
 // Map lưu subscriptions theo projectId
 // { [projectId]: StompSubscription }
 const projectSubscriptions = {};
@@ -70,10 +74,8 @@ const _createAndConnect = () => {
       });
 
       // Re-subscribe tất cả project topics (quan trọng khi reconnect)
-      Object.entries(projectSubscriptions).forEach(([projectId, sub]) => {
-        if (sub?.callback) {
-          _subscribeProjectInternal(Number(projectId), sub.callback);
-        }
+      Object.keys(projectCallbacks).forEach((projectId) => {
+        _subscribeProjectInternal(Number(projectId));
       });
 
       // Re-subscribe admin topic nếu có
@@ -131,17 +133,22 @@ const _scheduleReconnect = () => {
 };
 
 /** Internal: thực sự gọi stompClient.subscribe */
-const _subscribeProjectInternal = (projectId, callback) => {
+const _subscribeProjectInternal = (projectId) => {
   const destination = `/topic/project.${projectId}`;
   const subscription = stompClient.subscribe(destination, (message) => {
     try {
       const payload = JSON.parse(message.body);
-      callback(payload);
+      const callbacks = projectCallbacks[projectId];
+      if (callbacks) {
+        callbacks.forEach((cb) => {
+          try { cb(payload); } catch (err) { console.error('[WS] Listener error', err); }
+        });
+      }
     } catch (e) {
       console.error('[WS] Project message parse error', e);
     }
   });
-  projectSubscriptions[projectId] = { subscription, callback };
+  projectSubscriptions[projectId] = subscription;
   console.log(`[WS] Subscribed to ${destination}`);
   return subscription;
 };
@@ -154,11 +161,15 @@ const _subscribeProjectInternal = (projectId, callback) => {
  * @param {function} callback  - callback(realtimeMessage) nhận WS message
  */
 export const subscribeToProject = (projectId, callback) => {
-  // Lưu callback để re-subscribe sau reconnect
-  projectSubscriptions[projectId] = { callback, subscription: null };
+  if (!projectCallbacks[projectId]) {
+    projectCallbacks[projectId] = new Set();
+  }
+  projectCallbacks[projectId].add(callback);
 
   if (stompClient?.active && stompClient?.connected) {
-    _subscribeProjectInternal(projectId, callback);
+    if (!projectSubscriptions[projectId]) {
+      _subscribeProjectInternal(projectId);
+    }
   } else {
     // WS chưa connect — subscription sẽ được khôi phục trong onConnect
     console.log(`[WS] Queued subscription for project ${projectId} (not connected yet)`);
@@ -169,16 +180,34 @@ export const subscribeToProject = (projectId, callback) => {
  * Hủy subscribe project khi rời khỏi màn hình project.
  *
  * @param {number} projectId
+ * @param {function} [callback]
  */
-export const unsubscribeFromProject = (projectId) => {
-  const sub = projectSubscriptions[projectId];
-  if (sub?.subscription) {
-    try {
-      sub.subscription.unsubscribe();
-    } catch (e) { /* ignore */ }
+export const unsubscribeFromProject = (projectId, callback) => {
+  const callbacks = projectCallbacks[projectId];
+  if (callbacks && callback) {
+    callbacks.delete(callback);
+    if (callbacks.size === 0) {
+      const subscription = projectSubscriptions[projectId];
+      if (subscription) {
+        try {
+          subscription.unsubscribe();
+        } catch (e) { /* ignore */ }
+        delete projectSubscriptions[projectId];
+      }
+      delete projectCallbacks[projectId];
+      console.log(`[WS] Unsubscribed from project ${projectId} (no remaining listeners)`);
+    }
+  } else if (!callback) {
+    const subscription = projectSubscriptions[projectId];
+    if (subscription) {
+      try {
+        subscription.unsubscribe();
+      } catch (e) { /* ignore */ }
+      delete projectSubscriptions[projectId];
+    }
+    delete projectCallbacks[projectId];
+    console.log(`[WS] Cleared all listeners for project ${projectId}`);
   }
-  delete projectSubscriptions[projectId];
-  console.log(`[WS] Unsubscribed from project ${projectId}`);
 };
 
 /**
@@ -200,8 +229,15 @@ export const disconnect = () => {
   isFirstConnect    = true;
   adminCallback     = null;
   if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
-  // Clear tất cả project subscriptions
-  Object.keys(projectSubscriptions).forEach(id => delete projectSubscriptions[id]);
+  // Clear tất cả project subscriptions & callbacks
+  Object.keys(projectSubscriptions).forEach(id => {
+    const sub = projectSubscriptions[id];
+    if (sub) {
+      try { sub.unsubscribe(); } catch (e) { /* ignore */ }
+    }
+    delete projectSubscriptions[id];
+  });
+  Object.keys(projectCallbacks).forEach(id => delete projectCallbacks[id]);
   // Clear admin subscription
   if (adminSubscription) {
     try { adminSubscription.unsubscribe(); } catch (e) { /* ignore */ }

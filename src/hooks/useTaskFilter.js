@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { taskService } from '../services/taskService';
+import websocketService from '../services/websocketService';
 
 /**
  * Custom hook quản lý toàn bộ state cho chức năng Search & Filter Task.
@@ -128,6 +129,48 @@ export function useTaskFilter() {
   }, [debouncedKeyword, filters.status, filters.priority, filters.assigneeId,
       filters.projectId, filters.startDate, filters.endDate, filters.overdue,
       pagination.page, pagination.size, pagination.sortBy, pagination.sortDir]);
+
+  // ── Realtime WebSocket updates for search results ──────────────────────────
+  useEffect(() => {
+    const tasks = result.content;
+    const projectIds = [...new Set(tasks.map((t) => t.projectId).filter(Boolean))];
+    if (projectIds.length === 0) return;
+
+    const handleRealtimeMessage = (msg) => {
+      if (!msg?.type) return;
+      if (msg.type === 'TASK_STATUS_CHANGED' && msg.data?.id) {
+        setResult((prev) => ({
+          ...prev,
+          content: prev.content.map((t) =>
+            t.id === msg.data.id ? { ...t, status: msg.data.status } : t
+          ),
+        }));
+      } else if (msg.type === 'TASK_UPDATED' && msg.data?.id) {
+        setResult((prev) => ({
+          ...prev,
+          content: prev.content.map((t) =>
+            t.id === msg.data.id ? { ...t, ...msg.data } : t
+          ),
+        }));
+      } else if (msg.type === 'TASK_DELETED' && msg.data?.taskId) {
+        setResult((prev) => ({
+          ...prev,
+          content: prev.content.filter((t) => t.id !== msg.data.taskId),
+          totalElements: Math.max(0, prev.totalElements - 1),
+        }));
+      }
+    };
+
+    projectIds.forEach((pid) => {
+      websocketService.subscribeToProject(pid, handleRealtimeMessage);
+    });
+
+    return () => {
+      projectIds.forEach((pid) => {
+        websocketService.unsubscribeFromProject(pid, handleRealtimeMessage);
+      });
+    };
+  }, [result.content.map((t) => t.projectId).filter(Boolean).sort().join(',')]);
 
   return {
     // State
