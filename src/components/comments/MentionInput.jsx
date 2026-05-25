@@ -111,8 +111,8 @@ const MentionInput = ({ value, onChange, onSubmit, projectId, disabled }) => {
 
       {/* ── Dropdown gợi ý ── */}
       {mentionState.open && suggestions.length > 0 && (
-        <div className="absolute bottom-full mb-1 left-0 w-60 bg-white border border-black/10 rounded-xl shadow-xl z-50 overflow-hidden">
-          <p className="text-[10px] text-warm-muted px-3 py-1.5 border-b border-black/5 font-semibold uppercase tracking-wide">
+        <div className="absolute bottom-full mb-1 left-0 w-60 bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+          <p className="text-[10px] text-warm-muted dark:text-gray-500 px-3 py-1.5 border-b border-black/5 dark:border-white/5 font-semibold uppercase tracking-wide">
             Thành viên dự án
           </p>
           {suggestions.map((u, i) => (
@@ -121,7 +121,7 @@ const MentionInput = ({ value, onChange, onSubmit, projectId, disabled }) => {
               type="button"
               onMouseDown={(e) => { e.preventDefault(); insertMention(u); }}
               className={`w-full text-left px-3 py-2 flex items-center gap-2.5 transition-colors ${
-                i === activeIdx ? 'bg-indigo-50' : 'hover:bg-warm-white'
+                i === activeIdx ? 'bg-indigo-50 dark:bg-indigo-900/30' : 'hover:bg-warm-white dark:hover:bg-slate-800'
               }`}
             >
               {/* Avatar chữ cái đầu */}
@@ -129,10 +129,10 @@ const MentionInput = ({ value, onChange, onSubmit, projectId, disabled }) => {
                 {(u.fullName || u.username || 'U')[0].toUpperCase()}
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-semibold text-gray-800 truncate">
+                <div className="text-xs font-semibold text-gray-800 dark:text-gray-100 truncate">
                   {u.fullName || u.username}
                 </div>
-                <div className="text-[10px] text-warm-muted">@{u.username}</div>
+                <div className="text-[10px] text-warm-muted dark:text-gray-500">@{u.username}</div>
               </div>
             </button>
           ))}

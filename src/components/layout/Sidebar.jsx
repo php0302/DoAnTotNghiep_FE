@@ -32,23 +32,23 @@ const Sidebar = () => {
   return (
     <aside
       className={`
-        flex flex-col h-full bg-white border-r border-black/10 transition-all duration-300
+        flex flex-col h-full bg-white dark:bg-slate-900 border-r border-black/10 dark:border-white/10 transition-all duration-300
         ${collapsed ? 'w-16' : 'w-60'}
       `}
     >
       {/* Logo + collapse button */}
-      <div className="flex items-center justify-between px-3 py-4 border-b border-black/10">
+      <div className="flex items-center justify-between px-3 py-4 border-b border-black/10 dark:border-white/10">
         {!collapsed && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <FolderKanban size={16} className="text-white" />
             </div>
-            <span className="font-bold text-gray-900 text-sm">TaskMaster</span>
+            <span className="font-bold text-gray-900 dark:text-white text-sm">TaskMaster</span>
           </div>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-lg hover:bg-black/5 text-warm-muted hover:text-gray-800 transition-colors ml-auto"
+          className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white dark:bg-slate-800/10 text-warm-muted dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors ml-auto"
           title={collapsed ? 'Mở rộng' : 'Thu nhỏ'}
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -80,7 +80,7 @@ const Sidebar = () => {
 
         {user && ['ADMIN', 'ROLE_ADMIN'].includes(user.role) && (
           <>
-            <div className={`mt-4 mb-2 text-[10px] font-bold text-warm-gray uppercase tracking-wider ${collapsed ? 'text-center px-1' : 'px-4'}`}>
+            <div className={`mt-4 mb-2 text-[10px] font-bold text-warm-gray dark:text-gray-400 uppercase tracking-wider ${collapsed ? 'text-center px-1' : 'px-4'}`}>
               {!collapsed ? 'Quản trị' : '••'}
             </div>
             {ADMIN_NAV.map(({ to, icon: Icon, label }) => (
@@ -101,19 +101,19 @@ const Sidebar = () => {
       </nav>
 
       {/* User footer */}
-      <div className="border-t border-black/10 px-2 py-3 space-y-1">
+      <div className="border-t border-black/10 dark:border-white/10 px-2 py-3 space-y-1">
         {!collapsed && user && (
           <div className="flex items-center gap-2 px-3 py-2">
             <Avatar name={user.fullName || user.username} size="sm" />
             <div className="overflow-hidden flex-1">
-              <p className="text-xs font-semibold text-gray-900 truncate">{user.fullName || user.username}</p>
-              <p className="text-xs text-warm-muted truncate">{user.role}</p>
+              <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">{user.fullName || user.username}</p>
+              <p className="text-xs text-warm-muted dark:text-gray-400 truncate">{user.role}</p>
             </div>
           </div>
         )}
         <button
           onClick={handleLogout}
-          className={`sidebar-link w-full text-red-500 hover:text-red-600 hover:bg-red-50 ${collapsed ? 'justify-center' : ''}`}
+          className={`sidebar-link w-full text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 ${collapsed ? 'justify-center' : ''}`}
           title="Đăng xuất"
         >
           <LogOut size={18} className="flex-shrink-0" />

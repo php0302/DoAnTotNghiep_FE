@@ -10,9 +10,12 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: rgba(0,0,0,0.95);
-    background-color: #f6f5f4;
+    @apply text-gray-900 bg-warm-white dark:text-gray-100 dark:bg-slate-900 transition-colors duration-200;
   }
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 @layer components {
@@ -25,14 +28,14 @@
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-1.5
-           bg-black/5 text-gray-900 px-4 py-2 rounded text-sm font-semibold
-           hover:bg-black/10 active:scale-95 transition-all duration-150
+           bg-black/5 dark:bg-white/10 text-gray-900 dark:text-white px-4 py-2 rounded text-sm font-semibold
+           hover:bg-black/10 dark:hover:bg-white/20 active:scale-95 transition-all duration-150
            focus:outline-none;
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-1.5
-           bg-transparent text-warm-gray px-3 py-1.5 rounded text-sm font-medium
-           hover:bg-black/5 active:scale-95 transition-all duration-150
+           bg-transparent text-warm-gray dark:text-gray-300 px-3 py-1.5 rounded text-sm font-medium
+           hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all duration-150
            focus:outline-none;
   }
   .btn-danger {
@@ -43,47 +46,47 @@
 
   /* Form */
   .input-field {
-    @apply w-full bg-white border border-black/10 rounded px-3 py-2 text-sm
-           text-gray-900 placeholder-warm-muted
+    @apply w-full bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded px-3 py-2 text-sm
+           text-gray-900 dark:text-white placeholder-warm-muted dark:placeholder-gray-500
            focus:outline-none focus:ring-2 focus:ring-primary-focus focus:border-primary-focus
            transition-all duration-150;
   }
 
   /* Cards */
   .card {
-    @apply bg-white border border-black/10 rounded-xl shadow-card
-           transition-shadow duration-200 hover:shadow-deep;
+    @apply bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl shadow-card dark:shadow-none
+           transition-shadow duration-200 hover:shadow-deep dark:hover:shadow-none;
   }
   .card-flat {
-    @apply bg-white border border-black/10 rounded-xl;
+    @apply bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl;
   }
 
   /* Badges */
   .badge {
     @apply inline-flex items-center px-2 py-0.5 rounded-pill text-xs font-semibold tracking-wide;
   }
-  .badge-blue  { @apply badge bg-primary-light text-primary-focus; }
-  .badge-green { @apply badge bg-green-50 text-green-700; }
-  .badge-warn  { @apply badge bg-orange-50 text-orange-600; }
-  .badge-red   { @apply badge bg-red-50 text-red-600; }
-  .badge-gray  { @apply badge bg-black/5 text-warm-gray; }
+  .badge-blue  { @apply badge bg-primary-light dark:bg-primary-focus/20 text-primary-focus dark:text-primary-light; }
+  .badge-green { @apply badge bg-green-50 dark:bg-green-500/20 text-green-700 dark:text-green-400; }
+  .badge-warn  { @apply badge bg-orange-50 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400; }
+  .badge-red   { @apply badge bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-400; }
+  .badge-gray  { @apply badge bg-black/5 dark:bg-white/10 text-warm-gray dark:text-gray-300; }
 
   /* Sidebar */
   .sidebar-link {
     @apply flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium
-           text-warm-gray hover:bg-black/5 hover:text-gray-900
+           text-warm-gray dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white
            transition-all duration-150 cursor-pointer;
   }
   .sidebar-link.active {
-    @apply bg-primary-light text-primary font-semibold;
+    @apply bg-primary-light dark:bg-primary/20 text-primary dark:text-primary-light font-semibold;
   }
 
   /* Kanban */
   .kanban-col {
-    @apply flex flex-col bg-warm-white border border-black/10 rounded-xl flex-shrink-0 w-72;
+    @apply flex flex-col bg-warm-white dark:bg-slate-800/50 border border-black/10 dark:border-white/10 rounded-xl flex-shrink-0 w-72;
   }
   .task-card {
-    @apply bg-white border border-black/10 rounded-lg p-3 shadow-card
+    @apply bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-lg p-3 shadow-card dark:shadow-none
            hover:shadow-deep cursor-pointer transition-all duration-150 select-none;
   }
 }
@@ -113,5 +116,14 @@
 }
 .animate-fade-in {
   animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Recharts Tooltip Dark Mode */
+.dark .recharts-default-tooltip {
+  background-color: #1e293b !important; /* slate-800 */
+  border-color: rgba(255,255,255,0.1) !important;
+}
+.dark .recharts-tooltip-item, .dark .recharts-tooltip-label {
+  color: #f1f5f9 !important; /* slate-100 */
 }
 

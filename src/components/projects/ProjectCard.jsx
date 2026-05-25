@@ -36,7 +36,7 @@ const ProjectCard = ({ project, onDelete, onEdit, canManage = false }) => {
           <span className={`${statusBadge[status] ?? 'badge-gray'} mb-2 inline-block`}>
             {status ?? 'ACTIVE'}
           </span>
-          <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{name}</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-white text-sm leading-tight truncate">{name}</h3>
         </div>
 
         {/* Action buttons — chỉ hiện khi có quyền */}
@@ -44,14 +44,14 @@ const ProjectCard = ({ project, onDelete, onEdit, canManage = false }) => {
           <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0">
             <button
               onClick={(e) => { e.stopPropagation(); onEdit && onEdit(project); }}
-              className="btn-ghost p-1.5 text-warm-gray hover:text-primary hover:bg-blue-50 transition-all"
+              className="btn-ghost p-1.5 text-warm-gray dark:text-gray-400 hover:text-primary hover:bg-blue-50 transition-all"
               title="Chỉnh sửa"
             >
               <Pencil size={13} />
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); onDelete && onDelete(id); }}
-              className="btn-ghost p-1.5 text-warm-gray hover:text-red-600 hover:bg-red-50 transition-all"
+              className="btn-ghost p-1.5 text-warm-gray dark:text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all"
               title="Xóa dự án"
             >
               <Trash2 size={13} />
@@ -62,12 +62,12 @@ const ProjectCard = ({ project, onDelete, onEdit, canManage = false }) => {
 
       {/* Description */}
       {description && (
-        <p className="text-xs text-warm-gray leading-relaxed line-clamp-2">{description}</p>
+        <p className="text-xs text-warm-gray dark:text-gray-400 leading-relaxed line-clamp-2">{description}</p>
       )}
 
       {/* Dates */}
       {(startDate || endDate) && (
-        <div className="flex items-center gap-3 text-xs text-warm-muted">
+        <div className="flex items-center gap-3 text-xs text-warm-muted dark:text-gray-500">
           <Calendar size={12} />
           <span>{fmt(startDate)} {endDate ? `→ ${fmt(endDate)}` : ''}</span>
         </div>
@@ -76,8 +76,8 @@ const ProjectCard = ({ project, onDelete, onEdit, canManage = false }) => {
       {/* Progress bar */}
       <div>
         <div className="flex justify-between items-center mb-1">
-          <span className="text-xs text-warm-muted">Tiến độ</span>
-          <span className="text-xs font-semibold text-gray-700">{pct}%</span>
+          <span className="text-xs text-warm-muted dark:text-gray-500">Tiến độ</span>
+          <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">{pct}%</span>
         </div>
         <div className="h-1.5 bg-black/5 rounded-full overflow-hidden">
           <div
@@ -95,12 +95,12 @@ const ProjectCard = ({ project, onDelete, onEdit, canManage = false }) => {
             <Avatar key={m.id ?? i} name={m.fullName || m.username} size="xs" className="border-2 border-white" />
           ))}
           {members.length > 4 && (
-            <div className="w-6 h-6 rounded-full bg-black/5 border-2 border-white flex items-center justify-center text-[10px] font-semibold text-warm-gray">
+            <div className="w-6 h-6 rounded-full bg-black/5 border-2 border-white flex items-center justify-center text-[10px] font-semibold text-warm-gray dark:text-gray-400">
               +{members.length - 4}
             </div>
           )}
           {members.length === 0 && (
-            <span className="text-xs text-warm-muted italic">Chưa có thành viên</span>
+            <span className="text-xs text-warm-muted dark:text-gray-500 italic">Chưa có thành viên</span>
           )}
         </div>
 

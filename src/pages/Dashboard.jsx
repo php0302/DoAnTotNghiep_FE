@@ -43,16 +43,16 @@ const Dashboard = () => {
     <div className="space-y-8">
       {/* Greeting */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ letterSpacing: '-0.5px' }}>
           Chào {user?.fullName || user?.username || 'bạn'} 👋
         </h2>
-        <p className="text-warm-gray text-sm mt-1">Đây là tổng quan công việc của bạn hôm nay.</p>
+        <p className="text-warm-gray dark:text-gray-400 text-sm mt-1">Đây là tổng quan công việc của bạn hôm nay.</p>
       </div>
 
       {/* Projects section */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-gray-900">Dự án của bạn</h3>
+          <h3 className="text-base font-semibold text-gray-900 dark:text-white">Dự án của bạn</h3>
           <button onClick={() => setCreateOpen(true)} className="btn-primary text-sm">
             <Plus size={16} /> Tạo dự án
           </button>
@@ -63,10 +63,10 @@ const Dashboard = () => {
         ) : error ? (
           <div className="text-center py-12 text-danger bg-red-50 rounded-xl border border-red-200 text-sm">{error}</div>
         ) : projects.length === 0 ? (
-          <div className="text-center py-16 bg-white border border-black/10 rounded-2xl">
-            <FolderKanban size={40} className="text-warm-muted mx-auto mb-3 opacity-50" />
-            <p className="text-warm-gray font-medium">Chưa có dự án nào</p>
-            <p className="text-warm-muted text-sm mt-1">Tạo dự án đầu tiên để bắt đầu!</p>
+          <div className="text-center py-16 bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-2xl">
+            <FolderKanban size={40} className="text-warm-muted dark:text-gray-500 mx-auto mb-3 opacity-50" />
+            <p className="text-warm-gray dark:text-gray-400 font-medium">Chưa có dự án nào</p>
+            <p className="text-warm-muted dark:text-gray-500 text-sm mt-1">Tạo dự án đầu tiên để bắt đầu!</p>
             <button onClick={() => setCreateOpen(true)} className="btn-primary mt-4">
               <Plus size={16} /> Tạo dự án
             </button>

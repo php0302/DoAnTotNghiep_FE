@@ -36,22 +36,22 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
         <div className="flex-1 space-y-5 min-w-0">
           {/* Mô tả */}
           <div>
-            <h4 className="text-xs font-semibold text-warm-gray uppercase tracking-wide mb-2">
+            <h4 className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide mb-2">
               Mô tả
             </h4>
-            <p className="text-sm text-gray-700 leading-relaxed bg-warm-white border border-black/10 rounded-lg p-3 min-h-[60px]">
+            <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed bg-warm-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-lg p-3 min-h-[60px]">
               {task.description || (
-                <span className="text-warm-muted italic">Chưa có mô tả</span>
+                <span className="text-warm-muted dark:text-gray-500 italic">Chưa có mô tả</span>
               )}
             </p>
           </div>
 
           {/* Tabs: Bình luận & Thời gian */}
-          <div className="border-b border-black/10 flex gap-4">
+          <div className="border-b border-black/10 dark:border-white/10 flex gap-4">
             <button
               onClick={() => setActiveTab('comments')}
               className={`pb-2 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
-                activeTab === 'comments' ? 'border-primary text-primary' : 'border-transparent text-warm-gray hover:text-gray-800'
+                activeTab === 'comments' ? 'border-primary text-primary' : 'border-transparent text-warm-gray dark:text-gray-400 hover:text-gray-800 dark:text-gray-100'
               }`}
             >
               <MessageSquare size={16} /> Bình luận
@@ -59,7 +59,7 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
             <button
               onClick={() => setActiveTab('worklogs')}
               className={`pb-2 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
-                activeTab === 'worklogs' ? 'border-primary text-primary' : 'border-transparent text-warm-gray hover:text-gray-800'
+                activeTab === 'worklogs' ? 'border-primary text-primary' : 'border-transparent text-warm-gray dark:text-gray-400 hover:text-gray-800 dark:text-gray-100'
               }`}
             >
               <Clock size={16} /> Ghi nhận thời gian
@@ -85,7 +85,7 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
         </div>
 
         {/* ── Cột phải: metadata + actions ── */}
-        <div className="w-52 flex-shrink-0 space-y-4 border-l border-black/10 pl-6">
+        <div className="w-52 flex-shrink-0 space-y-4 border-l border-black/10 dark:border-white/10 pl-6">
           <MetaRow icon={<Flag size={14} />} label="Ưu tiên">
             <span className={PRIORITY_BADGE[task.priority] ?? 'badge-gray'}>
               {PRIORITY_LABELS[task.priority] ?? task.priority ?? '—'}
@@ -102,28 +102,28 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
             {task.assignedToName ? (
               <div className="flex items-center gap-1.5">
                 <Avatar name={task.assignedToName} size="xs" />
-                <span className="text-sm text-gray-800 truncate">
+                <span className="text-sm text-gray-800 dark:text-gray-100 truncate">
                   {task.assignedToName}
                 </span>
               </div>
             ) : (
-              <span className="text-sm text-warm-muted">Chưa giao</span>
+              <span className="text-sm text-warm-muted dark:text-gray-500">Chưa giao</span>
             )}
           </MetaRow>
 
           <MetaRow icon={<Calendar size={14} />} label="Deadline">
             {task.deadline ? (
-              <span className="text-sm text-gray-800">
+              <span className="text-sm text-gray-800 dark:text-gray-100">
                 {new Date(task.deadline).toLocaleDateString('vi-VN')}
               </span>
             ) : (
-              <span className="text-sm text-warm-muted">Chưa đặt</span>
+              <span className="text-sm text-warm-muted dark:text-gray-500">Chưa đặt</span>
             )}
           </MetaRow>
 
           {/* Edit / Delete — chỉ Admin & PM */}
           {isAdminOrManager && (
-            <div className="pt-4 mt-2 border-t border-black/10 space-y-2">
+            <div className="pt-4 mt-2 border-t border-black/10 dark:border-white/10 space-y-2">
               {onEdit && (
                 <button
                   onClick={() => onEdit(task)}
@@ -150,7 +150,7 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
 
 const MetaRow = ({ icon, label, children }) => (
   <div>
-    <div className="flex items-center gap-1.5 text-xs font-semibold text-warm-gray uppercase tracking-wide mb-1.5">
+    <div className="flex items-center gap-1.5 text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide mb-1.5">
       {icon} {label}
     </div>
     {children}

@@ -59,10 +59,10 @@ const Profile = () => {
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ letterSpacing: '-0.5px' }}>
             Hồ sơ cá nhân
           </h2>
-          <p className="text-warm-gray text-sm mt-1">Quản lý thông tin tài khoản của bạn</p>
+          <p className="text-warm-gray dark:text-gray-400 text-sm mt-1">Quản lý thông tin tài khoản của bạn</p>
         </div>
         {!isEditing && (
           <button onClick={() => setIsEditing(true)} className="btn-secondary text-sm">
@@ -72,11 +72,11 @@ const Profile = () => {
       </div>
 
       <div className="card p-8">
-        <div className="flex items-center gap-5 mb-8 pb-8 border-b border-black/10">
+        <div className="flex items-center gap-5 mb-8 pb-8 border-b border-black/10 dark:border-white/10">
           <Avatar name={user?.fullName || user?.username || 'U'} size="lg" />
           <div>
-            <h3 className="text-xl font-bold text-gray-900 mb-1">{user?.fullName || user?.username}</h3>
-            <p className="text-sm text-warm-gray">{user?.email}</p>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{user?.fullName || user?.username}</h3>
+            <p className="text-sm text-warm-gray dark:text-gray-400">{user?.email}</p>
             <div className="flex items-center gap-2 mt-2">
               <Shield size={13} className="text-primary" />
               <span className={roleColors[roleName] ?? 'badge-gray'}>{roleName}</span>
@@ -112,7 +112,7 @@ const Profile = () => {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 mb-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-1">Tên hiển thị</label>
+              <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Tên hiển thị</label>
               <input
                 type="text"
                 name="fullName"
@@ -124,7 +124,7 @@ const Profile = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-1">Email</label>
+              <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Email</label>
               <input
                 type="email"
                 name="email"
@@ -156,10 +156,10 @@ const Profile = () => {
       </div>
 
       <div className="card p-6">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Thông tin tài khoản</h3>
-        <div className="space-y-3 text-sm text-warm-gray">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Thông tin tài khoản</h3>
+        <div className="space-y-3 text-sm text-warm-gray dark:text-gray-400">
           <p>Tên đăng nhập không thể thay đổi sau khi đăng ký.</p>
-          <p className="text-xs text-warm-muted">
+          <p className="text-xs text-warm-muted dark:text-gray-500">
             Để thay đổi mật khẩu hoặc thông tin khác, vui lòng liên hệ quản trị viên hệ thống.
           </p>
         </div>
@@ -169,11 +169,11 @@ const Profile = () => {
 };
 
 const InfoRow = ({ icon, label, value }) => (
-  <div className="bg-warm-white border border-black/10 rounded-xl p-4">
-    <div className="flex items-center gap-1.5 text-xs font-semibold text-warm-gray uppercase tracking-wide mb-2">
+  <div className="bg-warm-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl p-4">
+    <div className="flex items-center gap-1.5 text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide mb-2">
       {icon} {label}
     </div>
-    <p className="text-sm font-medium text-gray-900">{value ?? '—'}</p>
+    <p className="text-sm font-medium text-gray-900 dark:text-white">{value ?? '—'}</p>
   </div>
 );
 

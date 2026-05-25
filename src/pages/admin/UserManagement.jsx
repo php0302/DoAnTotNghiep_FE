@@ -185,10 +185,10 @@ const UserManagement = () => {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ letterSpacing: '-0.5px' }}>
             Quản lý Thành viên
           </h2>
-          <p className="text-warm-gray text-sm mt-1">
+          <p className="text-warm-gray dark:text-gray-400 text-sm mt-1">
             Quản lý tài khoản và phân quyền cho hệ thống.
           </p>
         </div>
@@ -248,7 +248,7 @@ const UserManagement = () => {
                   <div className="flex items-center gap-4 min-w-0 flex-1">
                     <Avatar name={u.fullName || u.username} size="lg" />
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-sm font-bold text-gray-900 truncate flex items-center gap-2">
+                      <h4 className="text-sm font-bold text-gray-900 dark:text-white truncate flex items-center gap-2">
                         {u.fullName || u.username}
                         {!u.isActive && (
                           <span className="badge-red text-[10px] uppercase font-bold py-0.5 px-1.5">Bị khóa</span>
@@ -262,7 +262,7 @@ const UserManagement = () => {
                           </span>
                         )}
                       </h4>
-                      <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-warm-muted">
+                      <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-warm-muted dark:text-gray-500">
                         <span className="flex items-center gap-1"><Mail size={12} /> {u.email}</span>
                         <span className="flex items-center gap-1">
                           <Clock size={12} /> Gia nhập: {new Date(u.createdAt).toLocaleDateString('vi-VN')}
@@ -276,7 +276,7 @@ const UserManagement = () => {
                     <select
                       value={u.roleId || ''}
                       onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                      className="input-field py-1.5 text-sm font-medium pr-8 w-full sm:w-auto bg-gray-50 focus:bg-white cursor-pointer"
+                      className="input-field py-1.5 text-sm font-medium pr-8 w-full sm:w-auto bg-gray-50 dark:bg-slate-800/80 focus:bg-white dark:bg-slate-800 cursor-pointer"
                       disabled={u.id === user.id}
                     >
                       {roles.map((role) => (
@@ -312,21 +312,21 @@ const UserManagement = () => {
       {/* ══════════════ MODAL TẠO TÀI KHOẢN ══════════════ */}
       {showCreate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-black/10 animate-slide-up">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-black/10 dark:border-white/10 animate-slide-up">
             {/* Modal header */}
-            <div className="flex items-center justify-between p-6 border-b border-black/5">
+            <div className="flex items-center justify-between p-6 border-b border-black/5 dark:border-white/5">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center">
                   <UserPlus size={18} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">Tạo tài khoản nhân viên</h3>
-                  <p className="text-xs text-warm-gray mt-0.5">Nhân viên sẽ đổi mật khẩu khi đăng nhập lần đầu.</p>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white">Tạo tài khoản nhân viên</h3>
+                  <p className="text-xs text-warm-gray dark:text-gray-400 mt-0.5">Nhân viên sẽ đổi mật khẩu khi đăng nhập lần đầu.</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowCreate(false)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:bg-slate-700 transition-colors"
               >
                 <X size={18} />
               </button>
@@ -352,7 +352,7 @@ const UserManagement = () => {
 
               {/* Username */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                   Tên đăng nhập *
                 </label>
                 <input
@@ -370,7 +370,7 @@ const UserManagement = () => {
 
               {/* Email */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                   Email *
                 </label>
                 <input
@@ -386,7 +386,7 @@ const UserManagement = () => {
 
               {/* Password tạm thời */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                   Mật khẩu tạm thời *
                 </label>
                 <div className="relative">
@@ -409,12 +409,12 @@ const UserManagement = () => {
                     {showCreatePwd ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
-                <p className="text-xs text-warm-muted">Nhân viên sẽ phải đổi mật khẩu này khi đăng nhập lần đầu.</p>
+                <p className="text-xs text-warm-muted dark:text-gray-500">Nhân viên sẽ phải đổi mật khẩu này khi đăng nhập lần đầu.</p>
               </div>
 
               {/* Role — bắt buộc chọn */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                   Chức vụ *
                 </label>
                 <select
@@ -458,22 +458,22 @@ const UserManagement = () => {
       {/* ══════════════ MODAL XÓA TÀI KHOẢN ══════════════ */}
       {userToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm border border-black/10 animate-slide-up p-6">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm border border-black/10 dark:border-white/10 animate-slide-up p-6">
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
                 <AlertTriangle className="text-red-600" size={24} />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Vô hiệu hóa tài khoản?</h3>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Vô hiệu hóa tài khoản?</h3>
                 <p className="text-sm text-gray-500">
-                  Bạn có chắc muốn vô hiệu hóa <span className="font-semibold text-gray-900">{userToDelete.fullName || userToDelete.username}</span>?
+                  Bạn có chắc muốn vô hiệu hóa <span className="font-semibold text-gray-900 dark:text-white">{userToDelete.fullName || userToDelete.username}</span>?
                   Tài khoản này sẽ không thể đăng nhập được nữa.
                 </p>
               </div>
               <div className="flex w-full gap-3 pt-2">
                 <button
                   onClick={() => setUserToDelete(null)}
-                  className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition-colors"
+                  className="flex-1 px-4 py-2 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 text-gray-700 dark:text-gray-200 rounded-lg font-semibold transition-colors"
                   disabled={isDeleting}
                 >
                   Hủy

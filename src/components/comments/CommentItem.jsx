@@ -53,14 +53,14 @@ const CommentItem = ({ comment, currentUser, onDeleted, onUpdated }) => {
     <div className="flex gap-2.5 group">
       <Avatar name={comment.author?.fullName || comment.author?.username || 'U'} size="sm" />
 
-      <div className="flex-1 bg-warm-white border border-black/10 rounded-xl px-3 py-2.5 min-w-0">
+      <div className="flex-1 bg-warm-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl px-3 py-2.5 min-w-0">
         {/* Header */}
         <div className="flex items-center justify-between mb-1.5 gap-2">
           <div className="flex items-center gap-2 min-w-0">
-            <span className="text-xs font-semibold text-gray-800 truncate">
+            <span className="text-xs font-semibold text-gray-800 dark:text-gray-100 truncate">
               {comment.author?.fullName || comment.author?.username}
             </span>
-            <span className="text-[10px] text-warm-muted flex-shrink-0">
+            <span className="text-[10px] text-warm-muted dark:text-gray-500 flex-shrink-0">
               {formatTime(comment.createdAt)}
               {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
                 <span className="ml-1 italic">(đã chỉnh sửa)</span>
@@ -74,7 +74,7 @@ const CommentItem = ({ comment, currentUser, onDeleted, onUpdated }) => {
               {isAuthor && (
                 <button
                   onClick={() => { setEditText(comment.content); setEditing(true); }}
-                  className="p-1 text-warm-muted hover:text-indigo-600 rounded transition-colors"
+                  className="p-1 text-warm-muted dark:text-gray-500 hover:text-indigo-600 rounded transition-colors"
                   title="Sửa comment"
                 >
                   <Edit2 size={11} />
@@ -82,7 +82,7 @@ const CommentItem = ({ comment, currentUser, onDeleted, onUpdated }) => {
               )}
               <button
                 onClick={handleDelete}
-                className="p-1 text-warm-muted hover:text-red-500 rounded transition-colors"
+                className="p-1 text-warm-muted dark:text-gray-500 hover:text-red-500 rounded transition-colors"
                 title="Xoá comment"
               >
                 <Trash2 size={11} />

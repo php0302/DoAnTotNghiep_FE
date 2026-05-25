@@ -133,14 +133,14 @@ const EditProjectModal = ({ open, onClose, onSave, project }) => {
   return (
     <Modal open={open} onClose={onClose} title="Chỉnh sửa dự án" size="md">
       {/* Tab bar */}
-      <div className="flex gap-1 mb-4 bg-warm-white rounded-lg p-1 border border-black/8">
+      <div className="flex gap-1 mb-4 bg-warm-white dark:bg-slate-800 rounded-lg p-1 border border-black/8">
         <button
           type="button"
           onClick={() => setTab('info')}
           className={`flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold py-1.5 rounded-md transition-all
             ${tab === 'info'
-              ? 'bg-white shadow-sm text-primary border border-black/8'
-              : 'text-warm-gray hover:text-gray-700'}`}
+              ? 'bg-white dark:bg-slate-800 shadow-sm text-primary border border-black/8'
+              : 'text-warm-gray dark:text-gray-400 hover:text-gray-700 dark:text-gray-200'}`}
         >
           <FolderKanban size={13} /> Thông tin dự án
         </button>
@@ -149,8 +149,8 @@ const EditProjectModal = ({ open, onClose, onSave, project }) => {
           onClick={() => setTab('members')}
           className={`flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold py-1.5 rounded-md transition-all
             ${tab === 'members'
-              ? 'bg-white shadow-sm text-primary border border-black/8'
-              : 'text-warm-gray hover:text-gray-700'}`}
+              ? 'bg-white dark:bg-slate-800 shadow-sm text-primary border border-black/8'
+              : 'text-warm-gray dark:text-gray-400 hover:text-gray-700 dark:text-gray-200'}`}
         >
           <Users size={13} /> Thành viên
           {members.length > 0 && (
@@ -169,7 +169,7 @@ const EditProjectModal = ({ open, onClose, onSave, project }) => {
           )}
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Tên dự án *</label>
+            <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Tên dự án *</label>
             <input
               name="name"
               value={form.name}
@@ -181,7 +181,7 @@ const EditProjectModal = ({ open, onClose, onSave, project }) => {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Mô tả</label>
+            <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Mô tả</label>
             <textarea
               name="description"
               value={form.description}
@@ -194,11 +194,11 @@ const EditProjectModal = ({ open, onClose, onSave, project }) => {
 
           <div className="flex gap-3">
             <div className="space-y-1 flex-1">
-              <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Ngày bắt đầu *</label>
+              <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Ngày bắt đầu *</label>
               <input type="date" name="startDate" value={form.startDate} onChange={handleChange} className="input-field" />
             </div>
             <div className="space-y-1 flex-1">
-              <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Ngày kết thúc</label>
+              <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Ngày kết thúc</label>
               <input type="date" name="endDate" value={form.endDate} onChange={handleChange}
                 min={form.startDate} className="input-field" />
             </div>
@@ -227,33 +227,33 @@ const EditProjectModal = ({ open, onClose, onSave, project }) => {
 
           {/* Danh sách thành viên hiện tại */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide flex items-center gap-1.5">
+            <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide flex items-center gap-1.5">
               <Users size={13} /> Thành viên hiện tại ({members.length})
             </label>
 
             {memberLoading ? (
-              <p className="text-xs text-warm-muted text-center py-4">Đang tải...</p>
+              <p className="text-xs text-warm-muted dark:text-gray-500 text-center py-4">Đang tải...</p>
             ) : members.length === 0 ? (
-              <p className="text-xs text-warm-muted text-center py-4 border border-dashed border-black/15 rounded-lg">
+              <p className="text-xs text-warm-muted dark:text-gray-500 text-center py-4 border border-dashed border-black/15 rounded-lg">
                 Chưa có thành viên nào trong dự án
               </p>
             ) : (
-              <div className="border border-black/10 rounded-lg overflow-hidden divide-y divide-black/5 max-h-44 overflow-y-auto">
+              <div className="border border-black/10 dark:border-white/10 rounded-lg overflow-hidden divide-y divide-black/5 max-h-44 overflow-y-auto">
                 {members.map((u) => (
-                  <div key={u.id} className="flex items-center gap-3 px-3 py-2 hover:bg-warm-white transition-colors">
+                  <div key={u.id} className="flex items-center gap-3 px-3 py-2 hover:bg-warm-white dark:hover:bg-slate-800 transition-colors">
                     {/* Avatar */}
                     <span className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 bg-primary/15 text-primary">
                       {(u.fullName || u.username || '?')[0].toUpperCase()}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-800 truncate">{u.fullName || u.username}</p>
-                      <p className="text-xs text-warm-muted truncate">{u.email}</p>
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{u.fullName || u.username}</p>
+                      <p className="text-xs text-warm-muted dark:text-gray-500 truncate">{u.email}</p>
                     </div>
                     <button
                       type="button"
                       onClick={() => handleRemoveMember(u.id)}
                       title="Xóa khỏi dự án"
-                      className="p-1 rounded-md text-warm-muted hover:text-red-500 hover:bg-red-50 transition-colors flex-shrink-0"
+                      className="p-1 rounded-md text-warm-muted dark:text-gray-500 hover:text-red-500 hover:bg-red-50 transition-colors flex-shrink-0"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -265,13 +265,13 @@ const EditProjectModal = ({ open, onClose, onSave, project }) => {
 
           {/* Thêm thành viên mới */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide flex items-center gap-1.5">
+            <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide flex items-center gap-1.5">
               <UserPlus size={13} /> Thêm thành viên mới
             </label>
 
             {/* Chips người đang chọn */}
             {addIds.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 p-2 bg-warm-white border border-black/10 rounded-lg">
+              <div className="flex flex-wrap gap-1.5 p-2 bg-warm-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-lg">
                 {allUsers.filter((u) => addIds.includes(u.id)).map((u) => (
                   <span
                     key={u.id}
@@ -287,24 +287,24 @@ const EditProjectModal = ({ open, onClose, onSave, project }) => {
             )}
 
             {/* Danh sách user chưa là thành viên */}
-            <div className="border border-black/10 rounded-lg overflow-hidden max-h-36 overflow-y-auto">
+            <div className="border border-black/10 dark:border-white/10 rounded-lg overflow-hidden max-h-36 overflow-y-auto">
               {nonMembers.length === 0 ? (
-                <p className="text-xs text-warm-muted text-center py-4">Tất cả người dùng đã là thành viên</p>
+                <p className="text-xs text-warm-muted dark:text-gray-500 text-center py-4">Tất cả người dùng đã là thành viên</p>
               ) : (
                 nonMembers.map((u) => {
                   const checked = addIds.includes(u.id);
                   return (
                     <label
                       key={u.id}
-                      className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-colors hover:bg-warm-white
+                      className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-colors hover:bg-warm-white dark:hover:bg-slate-800
                         ${checked ? 'bg-primary/5' : ''}`}
                     >
                       <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0
-                        ${checked ? 'bg-primary text-white' : 'bg-warm-muted/20 text-warm-gray'}`}>
+                        ${checked ? 'bg-primary text-white' : 'bg-warm-muted/20 text-warm-gray dark:text-gray-400'}`}>
                         {(u.fullName || u.username || '?')[0].toUpperCase()}
                       </span>
-                      <span className="flex-1 text-sm text-gray-800">{u.fullName || u.username}</span>
-                      <span className="text-xs text-warm-muted">{u.email}</span>
+                      <span className="flex-1 text-sm text-gray-800 dark:text-gray-100">{u.fullName || u.username}</span>
+                      <span className="text-xs text-warm-muted dark:text-gray-500">{u.email}</span>
                       <input
                         type="checkbox"
                         checked={checked}

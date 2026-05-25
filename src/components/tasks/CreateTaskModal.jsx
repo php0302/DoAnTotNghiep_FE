@@ -67,26 +67,26 @@ const CreateTaskModal = ({ open, onClose, onCreate, onUpdate, task, defaultStatu
         )}
 
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Tiêu đề *</label>
+          <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Tiêu đề *</label>
           <input name="title" value={form.title} onChange={handleChange}
             className="input-field" placeholder="VD: Thiết kế màn hình Login" autoFocus />
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Mô tả</label>
+          <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Mô tả</label>
           <textarea name="description" value={form.description} onChange={handleChange}
             rows={2} className="input-field resize-none" placeholder="Chi tiết task..." />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Ưu tiên</label>
+            <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Ưu tiên</label>
             <select name="priority" value={form.priority} onChange={handleChange} className="input-field">
               {PRIORITIES.map((p) => <option key={p} value={p}>{PRIORITY_LABELS[p]}</option>)}
             </select>
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Trạng thái</label>
+            <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Trạng thái</label>
             <select name="status" value={form.status} onChange={handleChange} className="input-field">
               <option value="TODO">{STATUS_LABELS.TODO}</option>
               <option value="IN_PROGRESS">{STATUS_LABELS.IN_PROGRESS}</option>
@@ -97,13 +97,13 @@ const CreateTaskModal = ({ open, onClose, onCreate, onUpdate, task, defaultStatu
 
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Deadline</label>
+            <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Deadline</label>
             <input type="date" name="deadline" value={form.deadline} onChange={handleChange} min={today}
               className="input-field" />
           </div>
           {members.length > 0 && (
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Giao cho</label>
+              <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Giao cho</label>
               <select name="assignedToId" value={form.assignedToId} onChange={handleChange} className="input-field">
                 <option value="">Chưa giao</option>
                 {members.map((m) => (

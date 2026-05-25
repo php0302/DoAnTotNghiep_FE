@@ -2,20 +2,26 @@ import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const COLORS = {
-  TODO: '#94a3b8',        // slate-400
-  IN_PROGRESS: '#3b82f6', // blue-500
-  DONE: '#10b981',        // emerald-500
+  HIGH: '#f97316',   // orange-500
+  MEDIUM: '#3b82f6', // blue-500
+  LOW: '#64748b',    // slate-500
 };
 
 const LABELS = {
-  TODO: 'Cần làm',
-  IN_PROGRESS: 'Đang làm',
-  DONE: 'Hoàn thành',
+  HIGH: 'Ưu tiên Cao',
+  MEDIUM: 'Ưu tiên Trung bình',
+  LOW: 'Ưu tiên Thấp',
 };
 
-const TaskStatusChart = ({ data }) => {
-  // data format: { TODO: 10, IN_PROGRESS: 5, DONE: 20 }
-  const chartData = Object.entries(data || {}).map(([key, value]) => ({
+const TaskPriorityChart = ({ tasks }) => {
+  // Group tasks by priority
+  const priorityCounts = (tasks || []).reduce((acc, task) => {
+    const priority = task.priority || 'MEDIUM';
+    acc[priority] = (acc[priority] || 0) + 1;
+    return acc;
+  }, { LOW: 0, MEDIUM: 0, HIGH: 0 });
+
+  const chartData = Object.entries(priorityCounts).map(([key, value]) => ({
     name: LABELS[key] || key,
     value: value,
     color: COLORS[key] || '#cbd5e1',
@@ -23,15 +29,15 @@ const TaskStatusChart = ({ data }) => {
 
   if (chartData.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-warm-muted dark:text-gray-500 italic bg-warm-white dark:bg-slate-800/50 rounded-xl border border-black/5 dark:border-white/5">
-        Chưa có dữ liệu task
+      <div className="h-[350px] flex items-center justify-center text-warm-muted dark:text-gray-500 italic bg-warm-white dark:bg-slate-800/50 rounded-xl border border-black/5 dark:border-white/5">
+        Chưa có dữ liệu độ ưu tiên
       </div>
     );
   }
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl border border-black/5 dark:border-white/5 p-5 shadow-sm dark:shadow-none h-[350px] flex flex-col">
-      <h3 className="text-base font-bold text-gray-800 dark:text-white mb-4">Phân bố trạng thái Task</h3>
+      <h3 className="text-base font-bold text-gray-800 dark:text-white mb-4">Phân bố độ ưu tiên Task</h3>
       <div className="flex-1 min-h-0">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -62,4 +68,4 @@ const TaskStatusChart = ({ data }) => {
   );
 };
 
-export default TaskStatusChart;
+export default TaskPriorityChart;

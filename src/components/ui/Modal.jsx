@@ -39,11 +39,11 @@ const Modal = ({ open, onClose, title, children, size = 'md' }) => {
       {/* Panel */}
       <div
         ref={ref}
-        className={`relative z-10 w-full ${widths[size]} bg-white rounded-2xl shadow-deep border border-black/10 animate-fadeIn`}
+        className={`relative z-10 w-full ${widths[size]} bg-white dark:bg-slate-800 rounded-2xl shadow-deep border border-black/10 dark:border-white/10 animate-fadeIn`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-black/10">
-          <h2 className="text-base font-semibold text-gray-900">{title}</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-black/10 dark:border-white/10">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white">{title}</h2>
           <button onClick={onClose} className="btn-ghost p-1.5 rounded-lg">
             <X size={18} />
           </button>

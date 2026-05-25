@@ -6,7 +6,7 @@ const UserPerformanceChart = ({ data }) => {
   
   if (!data || data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-warm-muted italic bg-warm-white rounded-xl border border-black/5">
+      <div className="h-64 flex items-center justify-center text-warm-muted dark:text-gray-500 italic bg-warm-white dark:bg-slate-800/50 rounded-xl border border-black/5 dark:border-white/5">
         Chưa có dữ liệu hiệu suất
       </div>
     );
@@ -20,8 +20,8 @@ const UserPerformanceChart = ({ data }) => {
   }));
 
   return (
-    <div className="bg-white rounded-xl border border-black/5 p-5 shadow-sm h-[350px] flex flex-col">
-      <h3 className="text-base font-bold text-gray-800 mb-4">Hiệu suất thành viên (Top 10)</h3>
+    <div className="bg-white dark:bg-slate-800 rounded-xl border border-black/5 dark:border-white/5 p-5 shadow-sm dark:shadow-none h-[350px] flex flex-col">
+      <h3 className="text-base font-bold text-gray-800 dark:text-white mb-4">Hiệu suất thành viên (Top 10)</h3>
       <div className="flex-1 min-h-0">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -42,7 +42,7 @@ const UserPerformanceChart = ({ data }) => {
               tick={{ fill: '#64748b', fontSize: 12 }}
             />
             <Tooltip
-              cursor={{ fill: '#f1f5f9' }}
+              cursor={{ fill: 'rgba(148, 163, 184, 0.1)' }}
               contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
             />
             <Legend verticalAlign="top" height={36} iconType="circle" />

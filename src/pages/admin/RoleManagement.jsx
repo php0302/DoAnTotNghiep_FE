@@ -87,16 +87,16 @@ const RoleModal = ({ role, onClose, onSave }) => {
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-black/10">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-black/10 dark:border-white/10">
           <div className="flex items-center gap-2">
             <Shield size={20} className="text-primary" />
-            <h2 className="text-base font-bold text-gray-900">
+            <h2 className="text-base font-bold text-gray-900 dark:text-white">
               {isEdit ? 'Chỉnh sửa chức vụ' : 'Thêm chức vụ mới'}
             </h2>
           </div>
-          <button onClick={onClose} className="btn-ghost p-2 rounded-lg text-warm-gray hover:text-gray-800">
+          <button onClick={onClose} className="btn-ghost p-2 rounded-lg text-warm-gray dark:text-gray-400 hover:text-gray-800 dark:text-gray-100">
             <X size={18} />
           </button>
         </div>
@@ -105,7 +105,7 @@ const RoleModal = ({ role, onClose, onSave }) => {
           <div className="px-6 py-4 space-y-4 overflow-y-auto flex-1">
             {/* Tên chức vụ */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5">
                 Tên chức vụ <span className="text-red-500">*</span>
               </label>
               <input
@@ -117,7 +117,7 @@ const RoleModal = ({ role, onClose, onSave }) => {
                 disabled={role?.systemRole}
               />
               {role?.systemRole && (
-                <p className="text-xs text-warm-muted mt-1 flex items-center gap-1">
+                <p className="text-xs text-warm-muted dark:text-gray-500 mt-1 flex items-center gap-1">
                   <Lock size={11} /> Chức vụ hệ thống — không thể đổi tên
                 </p>
               )}
@@ -125,7 +125,7 @@ const RoleModal = ({ role, onClose, onSave }) => {
 
             {/* Mô tả */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Mô tả</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5">Mô tả</label>
               <textarea
                 value={description}
                 onChange={e => setDescription(e.target.value)}
@@ -137,7 +137,7 @@ const RoleModal = ({ role, onClose, onSave }) => {
 
             {/* Permissions */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Quyền hạn ({selectedPerms.size} / {Object.values(PERMISSION_GROUPS).flat().length} quyền được chọn)
               </label>
               <div className="space-y-3">
@@ -150,7 +150,7 @@ const RoleModal = ({ role, onClose, onSave }) => {
                       <button
                         type="button"
                         onClick={() => toggleGroup(perms)}
-                        className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-slate-800/80 hover:bg-gray-100 dark:bg-slate-700 transition-colors"
                       >
                         <div className="flex items-center gap-2">
                           <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${
@@ -158,9 +158,9 @@ const RoleModal = ({ role, onClose, onSave }) => {
                           }`}>
                             {allSelected && <CheckSquare size={10} className="text-white" />}
                           </div>
-                          <span className="text-xs font-bold text-gray-700 uppercase tracking-wide">{groupName}</span>
+                          <span className="text-xs font-bold text-gray-700 dark:text-gray-200 uppercase tracking-wide">{groupName}</span>
                         </div>
-                        <span className="text-xs text-warm-muted">{perms.filter(p => selectedPerms.has(p)).length}/{perms.length}</span>
+                        <span className="text-xs text-warm-muted dark:text-gray-500">{perms.filter(p => selectedPerms.has(p)).length}/{perms.length}</span>
                       </button>
                       {/* Permissions trong nhóm */}
                       <div className="px-4 py-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5">
@@ -172,7 +172,7 @@ const RoleModal = ({ role, onClose, onSave }) => {
                               onChange={() => togglePerm(perm)}
                               className="w-3.5 h-3.5 accent-primary cursor-pointer"
                             />
-                            <span className="text-xs text-gray-600 group-hover:text-gray-900 transition-colors">
+                            <span className="text-xs text-gray-600 group-hover:text-gray-900 dark:text-white transition-colors">
                               {PERMISSION_LABELS[perm]}
                             </span>
                           </label>
@@ -192,7 +192,7 @@ const RoleModal = ({ role, onClose, onSave }) => {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-black/10 bg-gray-50/50">
+          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-black/10 dark:border-white/10 bg-gray-50 dark:bg-slate-900/50">
             <button type="button" onClick={onClose} className="btn-ghost px-4 py-2 text-sm">
               Hủy
             </button>
@@ -213,14 +213,14 @@ const RoleModal = ({ role, onClose, onSave }) => {
 // =================== Modal Xác nhận Xóa ===================
 const DeleteModal = ({ role, onClose, onConfirm, deleting }) => (
   <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-6">
       <div className="flex items-start gap-4">
         <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
           <Trash2 size={18} className="text-red-600" />
         </div>
         <div className="flex-1">
-          <h3 className="font-bold text-gray-900 mb-1">Xóa chức vụ "{role.name}"?</h3>
-          <p className="text-sm text-warm-gray">
+          <h3 className="font-bold text-gray-900 dark:text-white mb-1">Xóa chức vụ "{role.name}"?</h3>
+          <p className="text-sm text-warm-gray dark:text-gray-400">
             Hành động này không thể hoàn tác. Chức vụ sẽ bị xóa vĩnh viễn khỏi hệ thống.
           </p>
         </div>
@@ -256,7 +256,7 @@ const RoleCard = ({ role, onEdit, onDelete }) => {
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-bold text-gray-900 text-sm">{role.name}</h3>
+              <h3 className="font-bold text-gray-900 dark:text-white text-sm">{role.name}</h3>
               {role.systemRole && (
                 <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full">
                   <Lock size={9} /> Hệ thống
@@ -264,7 +264,7 @@ const RoleCard = ({ role, onEdit, onDelete }) => {
               )}
             </div>
             {role.description && (
-              <p className="text-xs text-warm-muted mt-0.5 truncate">{role.description}</p>
+              <p className="text-xs text-warm-muted dark:text-gray-500 mt-0.5 truncate">{role.description}</p>
             )}
           </div>
         </div>
@@ -273,7 +273,7 @@ const RoleCard = ({ role, onEdit, onDelete }) => {
         <div className="flex gap-1 flex-shrink-0">
           <button
             onClick={() => onEdit(role)}
-            className="btn-ghost p-1.5 text-warm-gray hover:text-primary hover:bg-blue-50 rounded-lg transition-all"
+            className="btn-ghost p-1.5 text-warm-gray dark:text-gray-400 hover:text-primary hover:bg-blue-50 rounded-lg transition-all"
             title="Chỉnh sửa"
           >
             <Pencil size={14} />
@@ -281,7 +281,7 @@ const RoleCard = ({ role, onEdit, onDelete }) => {
           {!role.systemRole && (
             <button
               onClick={() => onDelete(role)}
-              className="btn-ghost p-1.5 text-warm-gray hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+              className="btn-ghost p-1.5 text-warm-gray dark:text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
               title="Xóa"
             >
               <Trash2 size={14} />
@@ -291,7 +291,7 @@ const RoleCard = ({ role, onEdit, onDelete }) => {
       </div>
 
       {/* Stats */}
-      <div className="flex items-center gap-4 text-xs text-warm-muted">
+      <div className="flex items-center gap-4 text-xs text-warm-muted dark:text-gray-500">
         <span className="flex items-center gap-1">
           <Users size={12} />
           {role.userCount} thành viên
@@ -392,10 +392,10 @@ const RoleManagement = () => {
       {/* Page header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ letterSpacing: '-0.5px' }}>
             Quản lý Chức vụ
           </h2>
-          <p className="text-warm-gray text-sm mt-1">
+          <p className="text-warm-gray dark:text-gray-400 text-sm mt-1">
             Tạo và cấu hình các chức vụ với quyền hạn chi tiết cho hệ thống.
           </p>
         </div>
@@ -431,17 +431,17 @@ const RoleManagement = () => {
                 <div className="w-9 h-9 bg-gray-200 rounded-xl" />
                 <div className="flex-1 space-y-2">
                   <div className="h-4 bg-gray-200 rounded w-1/2" />
-                  <div className="h-3 bg-gray-100 rounded w-3/4" />
+                  <div className="h-3 bg-gray-100 dark:bg-slate-700 rounded w-3/4" />
                 </div>
               </div>
-              <div className="h-3 bg-gray-100 rounded w-1/3" />
+              <div className="h-3 bg-gray-100 dark:bg-slate-700 rounded w-1/3" />
             </div>
           ))}
         </div>
       ) : error ? (
         <div className="text-center py-16 text-danger">{error}</div>
       ) : roles.length === 0 ? (
-        <div className="text-center py-16 text-warm-muted">
+        <div className="text-center py-16 text-warm-muted dark:text-gray-500">
           <Shield size={40} className="mx-auto mb-3 opacity-30" />
           <p className="text-sm">Chưa có chức vụ nào. Nhấn "Thêm chức vụ mới" để bắt đầu.</p>
         </div>

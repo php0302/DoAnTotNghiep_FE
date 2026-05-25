@@ -15,6 +15,7 @@ import RoleManagement from './pages/admin/RoleManagement';
 import StatisticDashboard from './pages/dashboard/StatisticDashboard';
 import DailyReport from './pages/reports/DailyReport';
 import Spinner from './components/ui/Spinner';
+import useThemeStore from './store/themeStore';
 
 /**
  * Route yêu cầu đăng nhập.
@@ -24,7 +25,7 @@ const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-warm-white">
+      <div className="min-h-screen flex items-center justify-center bg-warm-white dark:bg-slate-900">
         <Spinner size="lg" />
       </div>
     );
@@ -49,7 +50,7 @@ const GuestRoute = ({ children }) => {
 const ChangePasswordRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-warm-white">
+    <div className="min-h-screen flex items-center justify-center bg-warm-white dark:bg-slate-900">
       <Spinner size="lg" />
     </div>
   );
@@ -90,6 +91,16 @@ function AppRoutes() {
 }
 
 function App() {
+  const { theme } = useThemeStore();
+
+  React.useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
   return (
     <AuthProvider>
       <Router>

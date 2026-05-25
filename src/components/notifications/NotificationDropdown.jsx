@@ -7,7 +7,7 @@ const TYPE_CONFIG = {
   DEADLINE_UPDATED: { icon: Calendar,      color: 'text-orange-500', bg: 'bg-orange-50' },
   TASK_DELETED:     { icon: AlertCircle,   color: 'text-red-500',    bg: 'bg-red-50'    },
   COMMENT_ADDED:    { icon: MessageSquare, color: 'text-green-500',  bg: 'bg-green-50'  },
-  GENERAL:          { icon: Bell,          color: 'text-gray-400',   bg: 'bg-gray-50'   },
+  GENERAL:          { icon: Bell,          color: 'text-gray-400',   bg: 'bg-gray-50 dark:bg-slate-800/80'   },
 };
 
 /**
@@ -37,11 +37,11 @@ const NotificationDropdown = ({ notifications = [], onMarkRead, onMarkAllRead, o
   };
 
   return (
-    <div className="absolute right-0 top-12 z-50 w-[360px] bg-white border border-black/10 rounded-2xl shadow-deep overflow-hidden">
+    <div className="absolute right-0 top-12 z-50 w-[360px] bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-2xl shadow-deep overflow-hidden">
       {/* ── Header ── */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-black/8">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-gray-900">Thông báo</span>
+          <span className="text-sm font-semibold text-gray-900 dark:text-white">Thông báo</span>
           {unreadCount > 0 && (
             <span className="badge-blue">{unreadCount} mới</span>
           )}
@@ -63,12 +63,12 @@ const NotificationDropdown = ({ notifications = [], onMarkRead, onMarkAllRead, o
       {/* ── List ── */}
       <div className="max-h-96 overflow-y-auto divide-y divide-black/5">
         {notifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-warm-muted gap-2">
-            <div className="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center py-12 text-warm-muted dark:text-gray-500 gap-2">
+            <div className="w-14 h-14 rounded-full bg-gray-50 dark:bg-slate-800/80 flex items-center justify-center">
               <Bell size={24} className="opacity-30" />
             </div>
             <p className="text-sm font-medium">Không có thông báo nào</p>
-            <p className="text-xs text-warm-muted">Bạn sẽ nhận được thông báo ở đây</p>
+            <p className="text-xs text-warm-muted dark:text-gray-500">Bạn sẽ nhận được thông báo ở đây</p>
           </div>
         ) : (
           notifications.map((n) => {
@@ -78,7 +78,7 @@ const NotificationDropdown = ({ notifications = [], onMarkRead, onMarkAllRead, o
               <div
                 key={n.id}
                 className={`flex items-start gap-3 px-4 py-3 cursor-pointer transition-colors
-                  ${n.isRead ? 'hover:bg-gray-50' : 'bg-blue-50/30 hover:bg-blue-50/60'}`}
+                  ${n.isRead ? 'hover:bg-gray-50 dark:bg-slate-800/80' : 'bg-blue-50/30 dark:bg-blue-900/20 hover:bg-blue-50/60 dark:hover:bg-blue-900/40'}`}
                 onClick={() => handleClickNotif(n)}
               >
                 {/* Type icon */}
@@ -87,10 +87,10 @@ const NotificationDropdown = ({ notifications = [], onMarkRead, onMarkAllRead, o
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm leading-snug ${n.isRead ? 'text-gray-600' : 'text-gray-900 font-medium'}`}>
+                  <p className={`text-sm leading-snug ${n.isRead ? 'text-gray-600' : 'text-gray-900 dark:text-white font-medium'}`}>
                     {n.content}
                   </p>
-                  <p className="text-xs text-warm-muted mt-0.5">
+                  <p className="text-xs text-warm-muted dark:text-gray-500 mt-0.5">
                     {n.createdAt && new Date(n.createdAt).toLocaleString('vi-VN')}
                   </p>
                 </div>
@@ -103,7 +103,7 @@ const NotificationDropdown = ({ notifications = [], onMarkRead, onMarkAllRead, o
                       <button
                         title="Đánh dấu đã đọc"
                         onClick={(e) => { e.stopPropagation(); onMarkRead(n.id); }}
-                        className="p-1 rounded-md text-warm-muted hover:text-primary hover:bg-primary/10 transition-colors opacity-0 group-hover:opacity-100"
+                        className="p-1 rounded-md text-warm-muted dark:text-gray-500 hover:text-primary hover:bg-primary/10 transition-colors opacity-0 group-hover:opacity-100"
                       >
                         <CheckCheck size={12} />
                       </button>
@@ -119,7 +119,7 @@ const NotificationDropdown = ({ notifications = [], onMarkRead, onMarkAllRead, o
       {/* ── Footer ── */}
       {notifications.length > 0 && (
         <div className="border-t border-black/8 px-4 py-2.5 text-center">
-          <span className="text-xs text-warm-muted">
+          <span className="text-xs text-warm-muted dark:text-gray-500">
             {notifications.length} thông báo
           </span>
         </div>

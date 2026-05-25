@@ -84,9 +84,9 @@ const WorkLogList = ({ task, currentUser }) => {
     <div className="space-y-4">
       {/* Form thêm mới hoặc cảnh báo phân quyền */}
       {isAssignee ? (
-        <form onSubmit={handleSubmit} className="bg-warm-white p-4 rounded-lg border border-black/10 space-y-3">
+        <form onSubmit={handleSubmit} className="bg-warm-white dark:bg-slate-800 p-4 rounded-lg border border-black/10 dark:border-white/10 space-y-3">
           <div className="flex items-center justify-between">
-            <h5 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+            <h5 className="text-sm font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
               <Clock size={16} className="text-primary" />
               Log Time
             </h5>
@@ -95,7 +95,7 @@ const WorkLogList = ({ task, currentUser }) => {
           </div>
           <div className="flex gap-3">
             <div className="w-1/3">
-              <label className="block text-xs text-warm-gray mb-1">Số giờ *</label>
+              <label className="block text-xs text-warm-gray dark:text-gray-400 mb-1">Số giờ *</label>
               <input
                 type="number"
                 step="0.5"
@@ -109,10 +109,10 @@ const WorkLogList = ({ task, currentUser }) => {
               />
             </div>
             <div className="w-2/3">
-              <label className="block text-xs text-warm-gray mb-1">Ngày thực hiện</label>
+              <label className="block text-xs text-warm-gray dark:text-gray-400 mb-1">Ngày thực hiện</label>
               <input
                 type="date"
-                className="input-field py-1.5 px-3 text-sm bg-gray-100 cursor-not-allowed"
+                className="input-field py-1.5 px-3 text-sm bg-gray-100 dark:bg-slate-700 cursor-not-allowed"
                 value={date}
                 disabled
                 required
@@ -120,7 +120,7 @@ const WorkLogList = ({ task, currentUser }) => {
             </div>
           </div>
           <div>
-            <label className="block text-xs text-warm-gray mb-1">Mô tả công việc</label>
+            <label className="block text-xs text-warm-gray dark:text-gray-400 mb-1">Mô tả công việc</label>
             <textarea
               className="input-field py-1.5 px-3 text-sm min-h-[60px]"
               value={description}
@@ -150,23 +150,23 @@ const WorkLogList = ({ task, currentUser }) => {
 
       {/* Danh sách logs */}
       <div className="space-y-3 mt-4">
-        <h5 className="text-sm font-semibold text-gray-800">Lịch sử</h5>
+        <h5 className="text-sm font-semibold text-gray-800 dark:text-gray-100">Lịch sử</h5>
         {loading ? (
-          <div className="text-sm text-warm-muted text-center py-4">Đang tải...</div>
+          <div className="text-sm text-warm-muted dark:text-gray-500 text-center py-4">Đang tải...</div>
         ) : logs.length === 0 ? (
-          <div className="text-sm text-warm-muted text-center py-4 italic border border-dashed border-black/10 rounded-lg">
+          <div className="text-sm text-warm-muted dark:text-gray-500 text-center py-4 italic border border-dashed border-black/10 dark:border-white/10 rounded-lg">
             Chưa có thời gian nào được ghi nhận.
           </div>
         ) : (
           <div className="space-y-2">
             {logs.map(log => (
-              <div key={log.id} className="flex gap-3 p-3 bg-white border border-black/5 rounded-lg shadow-sm group">
+              <div key={log.id} className="flex gap-3 p-3 bg-white dark:bg-slate-800 border border-black/5 dark:border-white/5 rounded-lg shadow-sm group">
                 <Avatar name={log.userFullName} size="sm" />
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start">
                     <div>
-                      <span className="text-sm font-medium text-gray-900">{log.userFullName}</span>
-                      <span className="text-xs text-warm-muted ml-2">
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">{log.userFullName}</span>
+                      <span className="text-xs text-warm-muted dark:text-gray-500 ml-2">
                         {new Date(log.logDate).toLocaleDateString('vi-VN')}
                       </span>
                     </div>
@@ -181,7 +181,7 @@ const WorkLogList = ({ task, currentUser }) => {
                 {(isAdminOrManager || log.userId === currentUser?.id) && (
                   <button
                     onClick={() => handleDelete(log.id)}
-                    className="p-1.5 text-warm-muted hover:text-red-500 hover:bg-red-50 rounded-md transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0 self-start"
+                    className="p-1.5 text-warm-muted dark:text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0 self-start"
                     title="Xóa log"
                   >
                     <Trash2 size={14} />

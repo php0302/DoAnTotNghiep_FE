@@ -107,7 +107,7 @@ const CommentList = ({ taskId, projectId, currentUser }) => {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <h4 className="text-xs font-semibold text-warm-gray uppercase tracking-wide flex items-center gap-1.5">
+      <h4 className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide flex items-center gap-1.5">
         <MessageCircle size={14} />
         Bình luận ({comments.length})
       </h4>
@@ -120,7 +120,7 @@ const CommentList = ({ taskId, projectId, currentUser }) => {
       ) : (
         <div className="space-y-3 max-h-64 overflow-y-auto pr-1 scroll-smooth">
           {comments.length === 0 && (
-            <p className="text-xs text-warm-muted text-center py-4 italic">
+            <p className="text-xs text-warm-muted dark:text-gray-500 text-center py-4 italic">
               Chưa có bình luận nào. Hãy là người đầu tiên!
             </p>
           )}
@@ -157,9 +157,9 @@ const CommentList = ({ taskId, projectId, currentUser }) => {
           <Send size={14} />
         </button>
       </form>
-      <p className="text-[10px] text-warm-muted">
-        Nhấn <kbd className="px-1 py-0.5 bg-gray-100 rounded text-[10px]">Enter</kbd> để gửi,{' '}
-        <kbd className="px-1 py-0.5 bg-gray-100 rounded text-[10px]">Shift+Enter</kbd> để xuống dòng,{' '}
+      <p className="text-[10px] text-warm-muted dark:text-gray-500">
+        Nhấn <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-slate-700 rounded text-[10px]">Enter</kbd> để gửi,{' '}
+        <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-slate-700 rounded text-[10px]">Shift+Enter</kbd> để xuống dòng,{' '}
         dùng <span className="font-mono">@</span> để nhắc đến thành viên.
       </p>
     </div>

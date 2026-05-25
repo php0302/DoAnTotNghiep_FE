@@ -21,31 +21,31 @@ const STATUS_CONFIG = {
 
 /** Skeleton loading row */
 const SkeletonRow = () => (
-  <div className="bg-white border border-black/10 rounded-xl px-5 py-4 flex items-center gap-4 animate-pulse">
+  <div className="bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl px-5 py-4 flex items-center gap-4 animate-pulse">
     <div className="w-2 h-8 rounded-full bg-gray-200 flex-shrink-0" />
     <div className="flex-1 space-y-2">
       <div className="h-3.5 bg-gray-200 rounded w-2/3" />
-      <div className="h-2.5 bg-gray-100 rounded w-1/4" />
+      <div className="h-2.5 bg-gray-100 dark:bg-slate-700 rounded w-1/4" />
     </div>
     <div className="w-16 h-5 bg-gray-200 rounded-full" />
     <div className="w-14 h-5 bg-gray-200 rounded-full" />
-    <div className="w-20 h-4 bg-gray-100 rounded" />
+    <div className="w-20 h-4 bg-gray-100 dark:bg-slate-700 rounded" />
   </div>
 );
 
 /** Empty state */
 const EmptyState = ({ hasFilters }) => (
-  <div className="text-center py-20 bg-white border border-black/10 rounded-2xl">
-    <div className="w-16 h-16 bg-warm-white rounded-2xl flex items-center justify-center mx-auto mb-4">
+  <div className="text-center py-20 bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-2xl">
+    <div className="w-16 h-16 bg-warm-white dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
       {hasFilters
-        ? <Search size={28} className="text-warm-muted opacity-50" />
-        : <CheckSquare size={28} className="text-warm-muted opacity-50" />
+        ? <Search size={28} className="text-warm-muted dark:text-gray-500 opacity-50" />
+        : <CheckSquare size={28} className="text-warm-muted dark:text-gray-500 opacity-50" />
       }
     </div>
-    <p className="font-semibold text-gray-900 mb-1">
+    <p className="font-semibold text-gray-900 dark:text-white mb-1">
       {hasFilters ? 'Không tìm thấy task nào' : 'Chưa có task nào'}
     </p>
-    <p className="text-sm text-warm-muted">
+    <p className="text-sm text-warm-muted dark:text-gray-500">
       {hasFilters ? 'Thử thay đổi từ khóa hoặc bộ lọc' : 'Tất cả task sẽ xuất hiện ở đây'}
     </p>
   </div>
@@ -60,8 +60,8 @@ const Pagination = ({ result, goToPage }) => {
 
   return (
     <div className="flex items-center justify-between mt-4">
-      <p className="text-sm text-warm-muted">
-        Hiển thị <span className="font-semibold text-gray-900">{from}–{to}</span> / <span className="font-semibold text-gray-900">{totalElements}</span> task
+      <p className="text-sm text-warm-muted dark:text-gray-500">
+        Hiển thị <span className="font-semibold text-gray-900 dark:text-white">{from}–{to}</span> / <span className="font-semibold text-gray-900 dark:text-white">{totalElements}</span> task
       </p>
       <div className="flex items-center gap-1">
         <button
@@ -84,7 +84,7 @@ const Pagination = ({ result, goToPage }) => {
           } else {
             pageNum = i === 0 ? 0 : i === 1 ? -1 : i === 5 ? -1 : i === 6 ? totalPages - 1 : page - 2 + (i - 2);
           }
-          if (pageNum === -1) return <span key={`ellipsis-${i}`} className="px-1 text-warm-muted">…</span>;
+          if (pageNum === -1) return <span key={`ellipsis-${i}`} className="px-1 text-warm-muted dark:text-gray-500">…</span>;
           return (
             <button
               key={pageNum}
@@ -92,7 +92,7 @@ const Pagination = ({ result, goToPage }) => {
               className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${
                 pageNum === page
                   ? 'bg-primary text-white'
-                  : 'hover:bg-black/5 text-warm-gray'
+                  : 'hover:bg-black/5 text-warm-gray dark:text-gray-400'
               }`}
             >
               {pageNum + 1}
@@ -129,10 +129,10 @@ const TaskSearchPage = () => {
       {/* ── Header ── */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ letterSpacing: '-0.5px' }}>
             Tìm kiếm Task
           </h1>
-          <p className="text-warm-gray text-sm mt-1">
+          <p className="text-warm-gray dark:text-gray-400 text-sm mt-1">
             Tìm kiếm và lọc task theo nhiều tiêu chí
           </p>
         </div>
@@ -148,7 +148,7 @@ const TaskSearchPage = () => {
       </div>
 
       {/* ── Filter Bar ── */}
-      <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-sm">
+      <div className="bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-2xl p-4 shadow-sm">
         <TaskFilterBar
           filters={filters}
           pagination={pagination}
@@ -188,7 +188,7 @@ const TaskSearchPage = () => {
                 key={task.id}
                 id={`task-row-${task.id}`}
                 onClick={() => setSelectedTask(task)}
-                className="bg-white border border-black/10 rounded-xl px-5 py-4 flex items-center gap-4
+                className="bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl px-5 py-4 flex items-center gap-4
                            hover:shadow-card cursor-pointer transition-all group hover:border-primary/30"
               >
                 {/* Status bar */}
@@ -196,19 +196,19 @@ const TaskSearchPage = () => {
 
                 {/* Title + project + assignee */}
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium text-gray-900 truncate
-                    ${task.status === 'DONE' ? 'line-through text-warm-gray' : 'group-hover:text-primary transition-colors'}`}>
+                  <p className={`text-sm font-medium text-gray-900 dark:text-white truncate
+                    ${task.status === 'DONE' ? 'line-through text-warm-gray dark:text-gray-400' : 'group-hover:text-primary transition-colors'}`}>
                     {task.title}
                   </p>
                   <div className="flex items-center gap-2 mt-0.5">
                     {task.projectName && (
-                      <span className="text-xs text-warm-muted truncate">{task.projectName}</span>
+                      <span className="text-xs text-warm-muted dark:text-gray-500 truncate">{task.projectName}</span>
                     )}
                     {task.projectName && task.assignedToName && (
-                      <span className="text-warm-muted text-xs">·</span>
+                      <span className="text-warm-muted dark:text-gray-500 text-xs">·</span>
                     )}
                     {task.assignedToName && (
-                      <span className="text-xs text-warm-muted truncate">👤 {task.assignedToName}</span>
+                      <span className="text-xs text-warm-muted dark:text-gray-500 truncate">👤 {task.assignedToName}</span>
                     )}
                   </div>
                 </div>
@@ -227,7 +227,7 @@ const TaskSearchPage = () => {
                 {/* Deadline */}
                 {task.deadline && (
                   <div className={`flex items-center gap-1 text-xs flex-shrink-0 font-medium
-                    ${isOverdue ? 'text-danger' : 'text-warm-muted'}`}>
+                    ${isOverdue ? 'text-danger' : 'text-warm-muted dark:text-gray-500'}`}>
                     {isOverdue && <AlertCircle size={12} />}
                     <Calendar size={12} />
                     {new Date(task.deadline).toLocaleDateString('vi-VN')}

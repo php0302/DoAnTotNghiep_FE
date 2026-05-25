@@ -6,7 +6,7 @@ const TYPE_CONFIG = {
   DEADLINE_UPDATED: { icon: Calendar,      color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-200'},
   TASK_DELETED:     { icon: AlertCircle,   color: 'text-red-600',    bg: 'bg-red-50',    border: 'border-red-200'   },
   COMMENT_ADDED:    { icon: MessageSquare, color: 'text-green-600',  bg: 'bg-green-50',  border: 'border-green-200' },
-  GENERAL:          { icon: Bell,          color: 'text-gray-600',   bg: 'bg-gray-50',   border: 'border-gray-200'  },
+  GENERAL:          { icon: Bell,          color: 'text-gray-600',   bg: 'bg-gray-50 dark:bg-slate-800/80',   border: 'border-gray-200'  },
 };
 
 /**
@@ -45,7 +45,7 @@ const Toast = ({ notification, onDismiss }) => {
       role="alert"
     >
       {/* Icon */}
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-white shadow-sm`}>
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-white dark:bg-slate-800 shadow-sm`}>
         <Icon size={15} className={cfg.color} />
       </div>
 
@@ -54,7 +54,7 @@ const Toast = ({ notification, onDismiss }) => {
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-0.5">
           Thông báo mới
         </p>
-        <p className="text-sm text-gray-800 leading-snug line-clamp-2">
+        <p className="text-sm text-gray-800 dark:text-gray-100 leading-snug line-clamp-2">
           {notification.content}
         </p>
       </div>

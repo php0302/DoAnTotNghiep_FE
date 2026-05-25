@@ -67,21 +67,21 @@ const DailyReport = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-warm-white p-6">
+    <div className="flex-1 overflow-y-auto bg-warm-white dark:bg-slate-900 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Báo cáo Thời gian</h1>
-          <p className="text-sm text-warm-gray mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Báo cáo Thời gian</h1>
+          <p className="text-sm text-warm-gray dark:text-gray-400 mt-1">
             Theo dõi tổng số giờ làm việc của bạn và dự án.
           </p>
         </div>
 
         {/* Filter Bar */}
-        <div className="bg-white p-4 rounded-xl border border-black/10 shadow-sm flex flex-wrap items-center gap-4">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-black/10 dark:border-white/10 shadow-sm flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
             <CalendarIcon size={18} className="text-primary" />
-            <span className="text-sm font-semibold text-gray-800">Từ ngày:</span>
+            <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Từ ngày:</span>
             <input
               type="date"
               className="input-field py-1.5 px-3 text-sm w-auto"
@@ -91,7 +91,7 @@ const DailyReport = () => {
           </div>
           <div className="flex items-center gap-2">
             <CalendarIcon size={18} className="text-primary" />
-            <span className="text-sm font-semibold text-gray-800">Đến ngày:</span>
+            <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Đến ngày:</span>
             <input
               type="date"
               className="input-field py-1.5 px-3 text-sm w-auto"
@@ -102,8 +102,8 @@ const DailyReport = () => {
 
           {(user?.role?.name === 'ADMIN' || user?.role?.name === 'PROJECT_MANAGER') && (
             <>
-              <div className="flex items-center gap-2 border-l border-black/10 pl-4">
-                <span className="text-sm font-semibold text-gray-800">Dự án:</span>
+              <div className="flex items-center gap-2 border-l border-black/10 dark:border-white/10 pl-4">
+                <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Dự án:</span>
                 <select 
                   className="input-field py-1.5 px-3 text-sm w-40"
                   value={selectedProjectId}
@@ -118,7 +118,7 @@ const DailyReport = () => {
 
               {selectedProjectId && (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-gray-800">Thành viên:</span>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Thành viên:</span>
                   <select 
                     className="input-field py-1.5 px-3 text-sm w-40"
                     value={selectedUserId}
@@ -148,75 +148,75 @@ const DailyReport = () => {
         {/* Summary Cards */}
         {report && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-5 rounded-xl border border-black/10 shadow-sm flex items-center gap-4">
+            <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-black/10 dark:border-white/10 shadow-sm flex items-center gap-4">
               <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center">
                 <Clock size={24} />
               </div>
               <div>
-                <p className="text-sm font-semibold text-warm-gray uppercase tracking-wider">Tổng giờ đã làm</p>
-                <p className="text-2xl font-bold text-gray-900">{report.totalHours} <span className="text-lg font-medium text-warm-gray">giờ</span></p>
+                <p className="text-sm font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wider">Tổng giờ đã làm</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{report.totalHours} <span className="text-lg font-medium text-warm-gray dark:text-gray-400">giờ</span></p>
               </div>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-black/10 shadow-sm flex items-center gap-4">
+            <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-black/10 dark:border-white/10 shadow-sm flex items-center gap-4">
               <div className="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center">
                 <CalendarIcon size={24} />
               </div>
               <div>
-                <p className="text-sm font-semibold text-warm-gray uppercase tracking-wider">Số log</p>
-                <p className="text-2xl font-bold text-gray-900">{report.logs.length}</p>
+                <p className="text-sm font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wider">Số log</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{report.logs.length}</p>
               </div>
             </div>
           </div>
         )}
 
         {/* Table */}
-        <div className="bg-white rounded-xl border border-black/10 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-black/10 flex justify-between items-center bg-gray-50/50">
-            <h3 className="text-lg font-bold text-gray-900">Chi tiết công việc</h3>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-black/10 dark:border-white/10 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-black/10 dark:border-white/10 flex justify-between items-center bg-gray-50 dark:bg-slate-900/30">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Chi tiết công việc</h3>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-warm-white border-b border-black/10">
-                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray uppercase tracking-wider">Ngày</th>
-                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray uppercase tracking-wider">Thành viên</th>
-                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray uppercase tracking-wider">Công việc</th>
-                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray uppercase tracking-wider">Dự án</th>
-                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray uppercase tracking-wider">Số giờ</th>
-                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray uppercase tracking-wider">Mô tả</th>
-                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray uppercase tracking-wider text-right">Thao tác</th>
+              <thead className="bg-gray-50 dark:bg-slate-900/50">
+                <tr className="border-b border-black/10 dark:border-white/10">
+                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wider">Ngày</th>
+                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wider">Thành viên</th>
+                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wider">Công việc</th>
+                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wider">Dự án</th>
+                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wider">Số giờ</th>
+                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wider">Mô tả</th>
+                  <th className="py-3 px-6 text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wider text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/5">
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="py-8 text-center text-warm-muted">
+                    <td colSpan="6" className="py-8 text-center text-warm-muted dark:text-gray-500">
                       <Spinner className="mx-auto" />
                     </td>
                   </tr>
                 ) : report?.logs?.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="py-8 text-center text-warm-muted italic">
+                    <td colSpan="6" className="py-8 text-center text-warm-muted dark:text-gray-500 italic">
                       Không có dữ liệu log time trong khoảng thời gian này.
                     </td>
                   </tr>
                 ) : (
                   report?.logs.map((log) => (
-                    <tr key={log.id} className="hover:bg-warm-white transition-colors">
-                      <td className="py-3 px-6 text-sm text-gray-900 whitespace-nowrap">
+                    <tr key={log.id} className="hover:bg-warm-white dark:hover:bg-slate-800 transition-colors">
+                      <td className="py-3 px-6 text-sm text-gray-900 dark:text-white whitespace-nowrap">
                         {new Date(log.logDate).toLocaleDateString('vi-VN')}
                       </td>
                       <td className="py-3 px-6 whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <Avatar name={log.userFullName} size="xs" />
-                          <span className="text-sm font-medium text-gray-800">{log.userFullName}</span>
+                          <span className="text-sm font-medium text-gray-800 dark:text-gray-100">{log.userFullName}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-6 text-sm text-gray-900 font-medium">
+                      <td className="py-3 px-6 text-sm text-gray-900 dark:text-white font-medium">
                         {log.taskTitle}
                       </td>
-                      <td className="py-3 px-6 text-sm text-warm-muted">
+                      <td className="py-3 px-6 text-sm text-warm-muted dark:text-gray-500">
                         {log.projectName}
                       </td>
                       <td className="py-3 px-6">
@@ -231,7 +231,7 @@ const DailyReport = () => {
                         {(user?.role?.name === 'ADMIN' || user?.role?.name === 'PROJECT_MANAGER' || log.userId === user?.id) && (
                           <button 
                             onClick={() => handleDeleteLog(log.id)}
-                            className="p-1.5 text-warm-gray hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            className="p-1.5 text-warm-gray dark:text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Xóa log"
                           >
                             <Trash2 size={16} />

@@ -63,21 +63,21 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-warm-white px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-warm-white dark:bg-slate-900 px-4 py-12">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex items-center gap-2 justify-center mb-8">
           <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-card">
             <FolderKanban className="text-white" size={18} />
           </div>
-          <span className="font-bold text-gray-900 text-lg">TaskMaster</span>
+          <span className="font-bold text-gray-900 dark:text-white text-lg">TaskMaster</span>
         </div>
 
-        <div className="bg-white border border-black/10 rounded-2xl shadow-card p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1" style={{ letterSpacing: '-0.5px' }}>
+        <div className="bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-2xl shadow-card p-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1" style={{ letterSpacing: '-0.5px' }}>
             Tạo tài khoản
           </h2>
-          <p className="text-sm text-warm-gray mb-8">
+          <p className="text-sm text-warm-gray dark:text-gray-400 mb-8">
             Điền thông tin để bắt đầu sử dụng TaskMaster.
           </p>
 
@@ -100,7 +100,7 @@ const Register = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Username */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+              <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                 Tên đăng nhập *
               </label>
               <input
@@ -116,7 +116,7 @@ const Register = () => {
 
             {/* Email */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+              <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                 Email *
               </label>
               <input
@@ -132,7 +132,7 @@ const Register = () => {
 
             {/* Password */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+              <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                 Mật khẩu *
               </label>
               <input
@@ -148,7 +148,7 @@ const Register = () => {
 
             {/* Confirm password (client-side only) */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+              <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                 Xác nhận mật khẩu *
               </label>
               <input
@@ -179,7 +179,7 @@ const Register = () => {
             </button>
           </form>
 
-          <p className="text-center text-sm text-warm-gray mt-6">
+          <p className="text-center text-sm text-warm-gray dark:text-gray-400 mt-6">
             Đã có tài khoản?{' '}
             <Link to="/login" className="text-primary font-semibold hover:text-primary-hover">
               Đăng nhập

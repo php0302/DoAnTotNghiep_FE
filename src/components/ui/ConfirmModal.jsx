@@ -10,8 +10,8 @@ const ConfirmModal = ({ open, title, content, onConfirm, onClose, confirmText = 
         <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 ${danger ? 'bg-red-100 text-red-500' : 'bg-primary/10 text-primary'}`}>
           <AlertTriangle size={24} />
         </div>
-        <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-        <p className="text-sm text-warm-gray leading-relaxed mb-6">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{title}</h3>
+        <p className="text-sm text-warm-gray dark:text-gray-400 leading-relaxed mb-6">
           {content}
         </p>
 

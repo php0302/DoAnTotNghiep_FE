@@ -85,7 +85,7 @@ const CreateProjectModal = ({ open, onClose, onCreate }) => {
 
         {/* Tên dự án */}
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Tên dự án *</label>
+          <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Tên dự án *</label>
           <input
             name="name"
             value={form.name}
@@ -98,7 +98,7 @@ const CreateProjectModal = ({ open, onClose, onCreate }) => {
 
         {/* Mô tả */}
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Mô tả</label>
+          <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Mô tả</label>
           <textarea
             name="description"
             value={form.description}
@@ -112,11 +112,11 @@ const CreateProjectModal = ({ open, onClose, onCreate }) => {
         {/* Ngày */}
         <div className="flex gap-3">
           <div className="space-y-1 flex-1">
-            <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Ngày bắt đầu *</label>
+            <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Ngày bắt đầu *</label>
             <input type="date" name="startDate" value={form.startDate} onChange={handleChange} className="input-field" />
           </div>
           <div className="space-y-1 flex-1">
-            <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">Ngày kết thúc</label>
+            <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Ngày kết thúc</label>
             <input type="date" name="endDate" value={form.endDate} onChange={handleChange}
               min={form.startDate}
               className="input-field" />
@@ -125,13 +125,13 @@ const CreateProjectModal = ({ open, onClose, onCreate }) => {
 
         {/* Chọn thành viên */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide flex items-center gap-1.5">
+          <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide flex items-center gap-1.5">
             <UserPlus size={13} /> Thêm thành viên
           </label>
 
           {/* Chips các thành viên đã chọn */}
           {selectedUsers.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 p-2 bg-warm-white border border-black/10 rounded-lg">
+            <div className="flex flex-wrap gap-1.5 p-2 bg-warm-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-lg">
               {selectedUsers.map((u) => (
                 <span
                   key={u.id}
@@ -151,27 +151,27 @@ const CreateProjectModal = ({ open, onClose, onCreate }) => {
           )}
 
           {/* Danh sách user để chọn */}
-          <div className="border border-black/10 rounded-lg overflow-hidden max-h-40 overflow-y-auto">
+          <div className="border border-black/10 dark:border-white/10 rounded-lg overflow-hidden max-h-40 overflow-y-auto">
             {loadingUsers ? (
-              <p className="text-xs text-warm-muted text-center py-4">Đang tải danh sách...</p>
+              <p className="text-xs text-warm-muted dark:text-gray-500 text-center py-4">Đang tải danh sách...</p>
             ) : allUsers.length === 0 ? (
-              <p className="text-xs text-warm-muted text-center py-4">Không có thành viên nào</p>
+              <p className="text-xs text-warm-muted dark:text-gray-500 text-center py-4">Không có thành viên nào</p>
             ) : (
               allUsers.map((u) => {
                 const checked = selectedIds.includes(u.id);
                 return (
                   <label
                     key={u.id}
-                    className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-colors hover:bg-warm-white
+                    className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-colors hover:bg-warm-white dark:hover:bg-slate-800
                       ${checked ? 'bg-primary/5' : ''}`}
                   >
                     {/* Avatar circle */}
                     <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0
-                      ${checked ? 'bg-primary text-white' : 'bg-warm-muted/20 text-warm-gray'}`}>
+                      ${checked ? 'bg-primary text-white' : 'bg-warm-muted/20 text-warm-gray dark:text-gray-400'}`}>
                       {(u.fullName || u.username || '?')[0].toUpperCase()}
                     </span>
-                    <span className="flex-1 text-sm text-gray-800">{u.fullName || u.username}</span>
-                    <span className="text-xs text-warm-muted">{u.email}</span>
+                    <span className="flex-1 text-sm text-gray-800 dark:text-gray-100">{u.fullName || u.username}</span>
+                    <span className="text-xs text-warm-muted dark:text-gray-500">{u.email}</span>
                     <input
                       type="checkbox"
                       checked={checked}
@@ -184,7 +184,7 @@ const CreateProjectModal = ({ open, onClose, onCreate }) => {
             )}
           </div>
           {selectedIds.length > 0 && (
-            <p className="text-xs text-warm-muted">Đã chọn {selectedIds.length} thành viên</p>
+            <p className="text-xs text-warm-muted dark:text-gray-500">Đã chọn {selectedIds.length} thành viên</p>
           )}
         </div>
 

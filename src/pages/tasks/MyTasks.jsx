@@ -71,12 +71,12 @@ const MyTasks = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>Tasks của tôi</h2>
-        <p className="text-warm-gray text-sm mt-1">Tổng cộng {tasks.length} task được giao cho bạn</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ letterSpacing: '-0.5px' }}>Tasks của tôi</h2>
+        <p className="text-warm-gray dark:text-gray-400 text-sm mt-1">Tổng cộng {tasks.length} task được giao cho bạn</p>
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-2 bg-white border border-black/10 rounded-xl p-1 w-fit">
+      <div className="flex gap-2 bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl p-1 w-fit">
         {FILTERS.map(({ key, label }) => (
           <button
             key={key}
@@ -84,7 +84,7 @@ const MyTasks = () => {
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all
               ${filter === key
                 ? 'bg-primary text-white shadow-sm'
-                : 'text-warm-gray hover:text-gray-900 hover:bg-warm-white'
+                : 'text-warm-gray dark:text-gray-400 hover:text-gray-900 dark:text-white hover:bg-warm-white dark:hover:bg-slate-800'
               }`}
           >
             {label}
@@ -99,9 +99,9 @@ const MyTasks = () => {
       {loading ? (
         <div className="flex justify-center py-16"><Spinner size="lg" /></div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 bg-white border border-black/10 rounded-2xl">
-          <CheckSquare size={40} className="text-warm-muted mx-auto mb-3 opacity-40" />
-          <p className="text-warm-gray font-medium">Không có task nào</p>
+        <div className="text-center py-16 bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-2xl">
+          <CheckSquare size={40} className="text-warm-muted dark:text-gray-500 mx-auto mb-3 opacity-40" />
+          <p className="text-warm-gray dark:text-gray-400 font-medium">Không có task nào</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -111,7 +111,7 @@ const MyTasks = () => {
               <div
                 key={task.id}
                 onClick={() => setSelected(task)}
-                className="bg-white border border-black/10 rounded-xl px-5 py-4 flex items-center gap-4
+                className="bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl px-5 py-4 flex items-center gap-4
                            hover:shadow-card cursor-pointer transition-all group"
               >
                 {/* Status indicator */}
@@ -123,11 +123,11 @@ const MyTasks = () => {
 
                 {/* Title + project */}
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium text-gray-900 ${task.status === 'DONE' ? 'line-through text-warm-gray' : ''}`}>
+                  <p className={`text-sm font-medium text-gray-900 dark:text-white ${task.status === 'DONE' ? 'line-through text-warm-gray dark:text-gray-400' : ''}`}>
                     {task.title}
                   </p>
                   {task.projectName && (
-                    <p className="text-xs text-warm-muted mt-0.5">{task.projectName}</p>
+                    <p className="text-xs text-warm-muted dark:text-gray-500 mt-0.5">{task.projectName}</p>
                   )}
                 </div>
 
@@ -142,7 +142,7 @@ const MyTasks = () => {
                 {/* Deadline */}
                 {task.deadline && (
                   <div className={`flex items-center gap-1 text-xs flex-shrink-0
-                    ${isOverdue ? 'text-danger font-semibold' : 'text-warm-muted'}`}>
+                    ${isOverdue ? 'text-danger font-semibold' : 'text-warm-muted dark:text-gray-500'}`}>
                     {isOverdue && <AlertCircle size={12} />}
                     <Calendar size={12} />
                     {new Date(task.deadline).toLocaleDateString('vi-VN')}

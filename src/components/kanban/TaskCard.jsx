@@ -40,7 +40,7 @@ const TaskCard = ({ task, index, onClick, canDrag = false }) => {
         >
           {/* Lock icon nếu không có quyền kéo */}
           {!canDrag && (
-            <span className="absolute top-2 right-2 text-warm-muted/50" title="Chỉ người được giao task mới có thể thay đổi trạng thái">
+            <span className="absolute top-2 right-2 text-warm-muted dark:text-gray-500/50" title="Chỉ người được giao task mới có thể thay đổi trạng thái">
               <Lock size={11} />
             </span>
           )}
@@ -53,12 +53,12 @@ const TaskCard = ({ task, index, onClick, canDrag = false }) => {
           )}
 
           {/* Title */}
-          <p className="text-sm font-medium text-gray-900 leading-snug mb-3">{title}</p>
+          <p className="text-sm font-medium text-gray-900 dark:text-white leading-snug mb-3">{title}</p>
 
           {/* Footer: deadline + assignee */}
           <div className="flex items-center justify-between mt-auto">
             {deadline ? (
-              <div className={`flex items-center gap-1 text-xs ${isOverdue ? 'text-danger font-semibold' : 'text-warm-muted'}`}>
+              <div className={`flex items-center gap-1 text-xs ${isOverdue ? 'text-danger font-semibold' : 'text-warm-muted dark:text-gray-500'}`}>
                 <Calendar size={12} />
                 {new Date(deadline).toLocaleDateString('vi-VN')}
                 {isOverdue && <AlertCircle size={12} />}
@@ -70,7 +70,7 @@ const TaskCard = ({ task, index, onClick, canDrag = false }) => {
             {assignedToName ? (
               <Avatar name={assignedToName} size="xs" />
             ) : (
-              <User size={14} className="text-warm-muted" />
+              <User size={14} className="text-warm-muted dark:text-gray-500" />
             )}
           </div>
         </div>

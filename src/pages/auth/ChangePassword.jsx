@@ -71,16 +71,16 @@ const ChangePassword = () => {
   })();
 
   return (
-    <div className="min-h-screen flex bg-warm-white">
+    <div className="min-h-screen flex bg-warm-white dark:bg-slate-900">
       {/* ── Left panel ── */}
-      <div className="hidden lg:flex flex-col justify-center flex-1 px-16 bg-white">
+      <div className="hidden lg:flex flex-col justify-center flex-1 px-16 bg-white dark:bg-slate-800">
         <div className="max-w-md">
           {/* Logo */}
           <div className="flex items-center gap-3 mb-12">
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-card">
               <FolderKanban className="text-white" size={20} />
             </div>
-            <span className="font-bold text-gray-900 text-lg">TaskMaster</span>
+            <span className="font-bold text-gray-900 dark:text-white text-lg">TaskMaster</span>
           </div>
 
           {/* Icon bảo mật */}
@@ -88,10 +88,10 @@ const ChangePassword = () => {
             <ShieldCheck className="text-amber-500" size={32} />
           </div>
 
-          <h1 className="text-4xl font-bold text-gray-900 leading-tight mb-4" style={{ letterSpacing: '-1.5px' }}>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white leading-tight mb-4" style={{ letterSpacing: '-1.5px' }}>
             Bảo mật<br />tài khoản.
           </h1>
-          <p className="text-warm-gray text-base leading-relaxed mb-6">
+          <p className="text-warm-gray dark:text-gray-400 text-base leading-relaxed mb-6">
             Đây là lần đầu bạn đăng nhập vào hệ thống. Vui lòng đặt mật khẩu cá nhân để bảo vệ tài khoản.
           </p>
 
@@ -116,28 +116,28 @@ const ChangePassword = () => {
       </div>
 
       {/* ── Right panel — form ── */}
-      <div className="flex flex-1 items-center justify-center px-4 py-12 bg-warm-white">
+      <div className="flex flex-1 items-center justify-center px-4 py-12 bg-warm-white dark:bg-slate-900">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-2 justify-center mb-8">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <FolderKanban className="text-white" size={16} />
             </div>
-            <span className="font-bold text-gray-900">TaskMaster</span>
+            <span className="font-bold text-gray-900 dark:text-white">TaskMaster</span>
           </div>
 
-          <div className="bg-white border border-black/10 rounded-2xl shadow-card p-8">
+          <div className="bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-2xl shadow-card p-8">
             {/* Header */}
             <div className="flex items-center gap-3 mb-1">
               <div className="w-9 h-9 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-center">
                 <KeyRound className="text-amber-500" size={18} />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ letterSpacing: '-0.5px' }}>
                 Đặt mật khẩu mới
               </h2>
             </div>
-            <p className="text-sm text-warm-gray mb-2 ml-12">
-              Xin chào, <span className="font-semibold text-gray-700">{user?.fullName || user?.username}</span>!
+            <p className="text-sm text-warm-gray dark:text-gray-400 mb-2 ml-12">
+              Xin chào, <span className="font-semibold text-gray-700 dark:text-gray-200">{user?.fullName || user?.username}</span>!
             </p>
             <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 text-amber-700 text-xs rounded-lg px-3 py-2 mb-6">
               <ShieldCheck size={14} className="flex-shrink-0 mt-0.5" />
@@ -163,7 +163,7 @@ const ChangePassword = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Current password */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                   Mật khẩu tạm thời (do Admin cấp)
                 </label>
                 <div className="relative">
@@ -191,7 +191,7 @@ const ChangePassword = () => {
 
               {/* New password */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                   Mật khẩu mới
                 </label>
                 <div className="relative">
@@ -227,14 +227,14 @@ const ChangePassword = () => {
                         />
                       ))}
                     </div>
-                    <p className="text-xs text-warm-muted">Độ mạnh: <span className="font-medium">{strength.label}</span></p>
+                    <p className="text-xs text-warm-muted dark:text-gray-500">Độ mạnh: <span className="font-medium">{strength.label}</span></p>
                   </div>
                 )}
               </div>
 
               {/* Confirm password */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-warm-gray uppercase tracking-wide">
+                <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
                   Xác nhận mật khẩu mới
                 </label>
                 <div className="relative">

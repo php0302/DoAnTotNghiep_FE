@@ -20,7 +20,7 @@ const AppLayout = () => {
   const title = TITLES[pathname] ?? 'TaskMaster';
 
   return (
-    <div className="flex h-screen bg-warm-white overflow-hidden">
+    <div className="flex h-screen bg-warm-white dark:bg-slate-900 transition-colors duration-200 overflow-hidden">
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden">
         <TopNav title={title} />

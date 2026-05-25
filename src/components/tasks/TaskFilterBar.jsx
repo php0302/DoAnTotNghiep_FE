@@ -79,7 +79,7 @@ const TaskFilterBar = ({
       <div className="flex items-center gap-3 flex-wrap">
         {/* Search input */}
         <div className="relative flex-1 min-w-[220px]">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-warm-muted" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-warm-muted dark:text-gray-500" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
           <input
@@ -93,7 +93,7 @@ const TaskFilterBar = ({
           {filters.keyword && (
             <button
               onClick={() => setKeyword('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-warm-muted hover:text-gray-700"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-warm-muted dark:text-gray-500 hover:text-gray-700 dark:text-gray-200"
             >
               <X size={14} />
             </button>
@@ -102,12 +102,12 @@ const TaskFilterBar = ({
 
         {/* Sort dropdown */}
         <div className="relative">
-          <div className="flex items-center gap-1.5 border border-black/10 bg-white rounded px-3 py-2 text-sm text-gray-700 cursor-pointer hover:bg-black/5 transition-colors"
+          <div className="flex items-center gap-1.5 border border-black/10 dark:border-white/10 bg-white dark:bg-slate-800 rounded px-3 py-2 text-sm text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-black/5 transition-colors"
                onClick={() => {
                  const newDir = pagination.sortDir === 'ASC' ? 'DESC' : 'ASC';
                  setSort(pagination.sortBy, newDir);
                }}>
-            <ArrowUpDown size={14} className="text-warm-muted" />
+            <ArrowUpDown size={14} className="text-warm-muted dark:text-gray-500" />
             <select
               value={pagination.sortBy}
               onChange={e => setSort(e.target.value, pagination.sortDir)}
@@ -118,7 +118,7 @@ const TaskFilterBar = ({
                 <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </select>
-            <span className="text-xs text-warm-muted font-mono">
+            <span className="text-xs text-warm-muted dark:text-gray-500 font-mono">
               {pagination.sortDir === 'ASC' ? '↑' : '↓'}
             </span>
           </div>
@@ -131,7 +131,7 @@ const TaskFilterBar = ({
           className={`flex items-center gap-2 px-3 py-2 rounded border text-sm font-medium transition-all ${
             activeFilterCount > 0
               ? 'bg-primary/10 border-primary/30 text-primary'
-              : 'bg-white border-black/10 text-warm-gray hover:bg-black/5'
+              : 'bg-white dark:bg-slate-800 border-black/10 dark:border-white/10 text-warm-gray dark:text-gray-400 hover:bg-black/5'
           }`}
         >
           <SlidersHorizontal size={14} />
@@ -148,7 +148,7 @@ const TaskFilterBar = ({
         {(activeFilterCount > 0 || filters.keyword) && (
           <button
             onClick={resetFilters}
-            className="flex items-center gap-1.5 text-sm text-warm-gray hover:text-danger transition-colors"
+            className="flex items-center gap-1.5 text-sm text-warm-gray dark:text-gray-400 hover:text-danger transition-colors"
           >
             <X size={13} /> Xóa bộ lọc
           </button>
@@ -157,11 +157,11 @@ const TaskFilterBar = ({
 
       {/* ── Row 2: Advanced filter panel ── */}
       {showAdvanced && (
-        <div className="bg-white border border-black/10 rounded-xl p-4 space-y-4 animate-fade-in shadow-sm">
+        <div className="bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl p-4 space-y-4 animate-fade-in shadow-sm">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {/* Status */}
             <div>
-              <label className="block text-xs font-semibold text-warm-gray mb-1.5 uppercase tracking-wide">Trạng thái</label>
+              <label className="block text-xs font-semibold text-warm-gray dark:text-gray-400 mb-1.5 uppercase tracking-wide">Trạng thái</label>
               <select
                 id="filter-status"
                 value={filters.status}
@@ -175,7 +175,7 @@ const TaskFilterBar = ({
 
             {/* Priority */}
             <div>
-              <label className="block text-xs font-semibold text-warm-gray mb-1.5 uppercase tracking-wide">Ưu tiên</label>
+              <label className="block text-xs font-semibold text-warm-gray dark:text-gray-400 mb-1.5 uppercase tracking-wide">Ưu tiên</label>
               <select
                 id="filter-priority"
                 value={filters.priority}
@@ -189,7 +189,7 @@ const TaskFilterBar = ({
 
             {/* Assignee */}
             <div>
-              <label className="block text-xs font-semibold text-warm-gray mb-1.5 uppercase tracking-wide">Người thực hiện</label>
+              <label className="block text-xs font-semibold text-warm-gray dark:text-gray-400 mb-1.5 uppercase tracking-wide">Người thực hiện</label>
               <select
                 id="filter-assignee"
                 value={filters.assigneeId}
@@ -205,7 +205,7 @@ const TaskFilterBar = ({
 
             {/* Project */}
             <div>
-              <label className="block text-xs font-semibold text-warm-gray mb-1.5 uppercase tracking-wide">Project</label>
+              <label className="block text-xs font-semibold text-warm-gray dark:text-gray-400 mb-1.5 uppercase tracking-wide">Project</label>
               <select
                 id="filter-project"
                 value={filters.projectId}
@@ -222,14 +222,14 @@ const TaskFilterBar = ({
 
           {/* Deadline section */}
           <div>
-            <label className="block text-xs font-semibold text-warm-gray mb-2 uppercase tracking-wide">Deadline</label>
+            <label className="block text-xs font-semibold text-warm-gray dark:text-gray-400 mb-2 uppercase tracking-wide">Deadline</label>
             <div className="flex flex-wrap items-center gap-2">
               {/* Preset buttons */}
               {DEADLINE_PRESETS.map(preset => (
                 <button
                   key={preset.label}
                   onClick={() => handleDeadlinePreset(preset)}
-                  className="text-xs px-2.5 py-1 rounded-lg border border-black/10 bg-warm-white hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all"
+                  className="text-xs px-2.5 py-1 rounded-lg border border-black/10 dark:border-white/10 bg-warm-white dark:bg-slate-800 hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all"
                 >
                   {preset.label}
                 </button>
@@ -241,13 +241,13 @@ const TaskFilterBar = ({
                 className={`text-xs px-2.5 py-1 rounded-lg border transition-all ${
                   filters.overdue
                     ? 'bg-danger/10 border-danger/30 text-danger font-semibold'
-                    : 'border-black/10 bg-warm-white hover:bg-danger/10 hover:border-danger/30 hover:text-danger'
+                    : 'border-black/10 dark:border-white/10 bg-warm-white dark:bg-slate-800 hover:bg-danger/10 hover:border-danger/30 hover:text-danger'
                 }`}
               >
                 ⚠️ Quá hạn
               </button>
 
-              <span className="text-warm-muted text-xs">hoặc</span>
+              <span className="text-warm-muted dark:text-gray-500 text-xs">hoặc</span>
 
               {/* Custom date range */}
               <div className="flex items-center gap-1.5">
@@ -258,7 +258,7 @@ const TaskFilterBar = ({
                   onChange={e => { setFilter('startDate', e.target.value); setFilter('overdue', false); }}
                   className="input-field text-xs w-36"
                 />
-                <span className="text-warm-muted text-xs">→</span>
+                <span className="text-warm-muted dark:text-gray-500 text-xs">→</span>
                 <input
                   id="filter-end-date"
                   type="date"

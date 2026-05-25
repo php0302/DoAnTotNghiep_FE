@@ -18,7 +18,7 @@ const MentionHighlight = ({ content, mentions = [] }) => {
   const parts = content.split(/(@[a-zA-Z0-9_]+)/g);
 
   return (
-    <p className="text-sm text-gray-700 whitespace-pre-wrap break-words leading-relaxed">
+    <p className="text-sm text-gray-700 dark:text-gray-200 whitespace-pre-wrap break-words leading-relaxed">
       {parts.map((part, i) => {
         if (part.startsWith('@')) {
           const uname = part.slice(1).toLowerCase();
@@ -29,7 +29,7 @@ const MentionHighlight = ({ content, mentions = [] }) => {
               className={
                 isValid
                   ? 'font-semibold text-indigo-600 bg-indigo-50 rounded px-0.5'
-                  : 'text-warm-gray'
+                  : 'text-warm-gray dark:text-gray-400'
               }
             >
               {part}

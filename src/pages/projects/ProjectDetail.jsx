@@ -84,11 +84,11 @@ const ProjectDetail = () => {
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h2 className="text-xl font-bold text-gray-900" style={{ letterSpacing: '-0.5px' }}>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white" style={{ letterSpacing: '-0.5px' }}>
               {project?.name ?? 'Dự án'}
             </h2>
             {project?.description && (
-              <p className="text-xs text-warm-gray mt-0.5">{project.description}</p>
+              <p className="text-xs text-warm-gray dark:text-gray-400 mt-0.5">{project.description}</p>
             )}
           </div>
         </div>
@@ -97,7 +97,7 @@ const ProjectDetail = () => {
         <div className="flex items-center gap-3">
           {/* Member stack */}
           <div className="flex items-center gap-1">
-            <Users size={14} className="text-warm-muted" />
+            <Users size={14} className="text-warm-muted dark:text-gray-500" />
             <div className="flex -space-x-2 ml-1">
               {(project?.members ?? []).slice(0, 5).map((m, i) => (
                 <Avatar key={m.id ?? i} name={m.fullName || m.username} size="sm" className="border-2 border-white" />

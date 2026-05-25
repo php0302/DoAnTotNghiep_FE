@@ -28,12 +28,12 @@ const Avatar = ({ name = '', src = null, size = 'md', className = '' }) => {
     <img
       src={src}
       alt={name}
-      className={`${sizes[size]} rounded-full object-cover border border-black/10 ${className}`}
+      className={`${sizes[size]} rounded-full object-cover border border-black/10 dark:border-white/10 ${className}`}
     />
   ) : (
     <div
       title={name}
-      className={`${sizes[size]} ${color} rounded-full flex items-center justify-center font-semibold border border-black/10 ${className}`}
+      className={`${sizes[size]} ${color} rounded-full flex items-center justify-center font-semibold border border-black/10 dark:border-white/10 ${className}`}
     >
       {initials || '?'}
     </div>
