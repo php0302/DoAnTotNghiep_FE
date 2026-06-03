@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Avatar from '../ui/Avatar';
 import MentionHighlight from './MentionHighlight';
 import { commentService } from '../../services/commentService';
-import { Trash2, Edit2, Check, X } from 'lucide-react';
+import { attachmentService } from '../../services/attachmentService';
+import { Trash2, Edit2, Check, X, ZoomIn } from 'lucide-react';
 
 /**
  * Hiển thị 1 comment với tính năng xoá & sửa inline.
@@ -118,7 +119,47 @@ const CommentItem = ({ comment, currentUser, onDeleted, onUpdated }) => {
             </div>
           </div>
         ) : (
-          <MentionHighlight content={comment.content} mentions={comment.mentions} />
+          <div className="space-y-2">
+            {/* Text content */}
+            {comment.content && comment.content !== '\u200b' && (
+              <MentionHighlight content={comment.content} mentions={comment.mentions} />
+            )}
+
+            {/* Inline image attachments */}
+            {comment.attachments?.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-1.5">
+                {comment.attachments
+                  .filter((att) => att.fileType?.startsWith('image/'))
+                  .map((att, idx) => {
+                    const imgUrl = att.isLocal
+                      ? att.fileUrl
+                      : attachmentService.getFileUrl(att.fileUrl);
+                    return (
+                      <div
+                        key={att.id ?? idx}
+                        className="relative group/img rounded-lg overflow-hidden border border-black/10 dark:border-white/10 cursor-pointer"
+                        onClick={() => window.open(imgUrl, '_blank', 'noopener,noreferrer')}
+                        title="Click để xem full size"
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={att.originalName || 'Image'}
+                          className="max-h-48 max-w-full object-contain block"
+                          style={{ maxWidth: '280px' }}
+                        />
+                        {/* Hover overlay */}
+                        <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/20 transition-colors flex items-center justify-center">
+                          <ZoomIn
+                            size={20}
+                            className="text-white opacity-0 group-hover/img:opacity-100 transition-opacity drop-shadow"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

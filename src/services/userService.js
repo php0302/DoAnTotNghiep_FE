@@ -14,6 +14,9 @@ export const userService = {
   /** Đổi mật khẩu (kể cả lần đầu bắt buộc) */
   changePassword: (data)     => apiClient.put('/users/me/password', data),
 
+  /** Admin đặt lại mật khẩu cho user khác — không cần mật khẩu cũ */
+  resetPassword: (id, data)  => apiClient.put(`/users/${id}/reset-password`, data),
+
   /** Xóa/Khóa tài khoản */
   deleteUser: (id)           => apiClient.delete(`/users/${id}`),
 };

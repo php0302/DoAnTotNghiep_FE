@@ -8,7 +8,7 @@ import Avatar from '../../components/ui/Avatar';
 import Spinner from '../../components/ui/Spinner';
 import {
   Mail, Shield, Clock, Edit2, Save, X, Trash2,
-  UserPlus, KeyRound, Eye, EyeOff, AlertCircle, CheckCircle2, AlertTriangle,
+  UserPlus, KeyRound, Eye, EyeOff, AlertCircle, CheckCircle2, AlertTriangle, RefreshCw,
 } from 'lucide-react';
 
 const UserManagement = () => {
@@ -34,6 +34,17 @@ const UserManagement = () => {
   // ── Modal xóa tài khoản ──
   const [userToDelete, setUserToDelete] = useState(null);
   const [isDeleting, setIsDeleting]     = useState(false);
+
+  // ── Modal đặt lại mật khẩu ──
+  const [resetTarget, setResetTarget]         = useState(null); // user đang reset
+  const [resetPwd, setResetPwd]               = useState('');
+  const [resetPwdConfirm, setResetPwdConfirm] = useState('');
+  const [forceChange, setForceChange]         = useState(true);
+  const [showResetPwd, setShowResetPwd]       = useState(false);
+  const [showResetPwdConfirm, setShowResetPwdConfirm] = useState(false);
+  const [resetError, setResetError]           = useState('');
+  const [resetSuccess, setResetSuccess]       = useState(false);
+  const [resetting, setResetting]             = useState(false);
 
   const isAdmin = ['ADMIN', 'ROLE_ADMIN'].includes(user?.role);
 
@@ -177,6 +188,50 @@ const UserManagement = () => {
     }
   };
 
+  // ── Mở modal đặt lại mật khẩu ──
+  const handleOpenReset = (u) => {
+    setResetTarget(u);
+    setResetPwd('');
+    setResetPwdConfirm('');
+    setForceChange(true);
+    setShowResetPwd(false);
+    setShowResetPwdConfirm(false);
+    setResetError('');
+    setResetSuccess(false);
+  };
+
+  const handleResetSubmit = async (e) => {
+    e.preventDefault();
+    setResetError('');
+    if (resetPwd.length < 6) {
+      setResetError('Mật khẩu mới phải có ít nhất 6 ký tự.');
+      return;
+    }
+    if (resetPwd !== resetPwdConfirm) {
+      setResetError('Xác nhận mật khẩu không khớp.');
+      return;
+    }
+    setResetting(true);
+    try {
+      await userService.resetPassword(resetTarget.id, {
+        newPassword: resetPwd,
+        forceChangeOnLogin: forceChange,
+      });
+      setResetSuccess(true);
+      // Cập nhật flag mustChangePassword trong danh sách
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === resetTarget.id ? { ...u, mustChangePassword: forceChange } : u
+        )
+      );
+      setTimeout(() => setResetTarget(null), 1800);
+    } catch (err) {
+      setResetError(err?.response?.data?.message ?? 'Đặt lại mật khẩu thất bại. Vui lòng thử lại.');
+    } finally {
+      setResetting(false);
+    }
+  };
+
   if (loading) return <div className="flex justify-center p-10"><Spinner size="lg" /></div>;
   if (error)   return <div className="p-10 text-center text-danger">{error}</div>;
 
@@ -292,6 +347,16 @@ const UserManagement = () => {
                     >
                       <Edit2 size={15} />
                     </button>
+                    {/* Nút đặt lại mật khẩu — chỉ cho user khác và còn active */}
+                    {u.id !== user.id && (
+                      <button
+                        onClick={() => handleOpenReset(u)}
+                        className="p-1.5 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-md transition-colors ml-1"
+                        title="Đặt lại mật khẩu"
+                      >
+                        <RefreshCw size={15} />
+                      </button>
+                    )}
                     {u.id !== user.id && u.isActive && (
                       <button
                         onClick={() => setUserToDelete(u)}
@@ -488,6 +553,166 @@ const UserManagement = () => {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════ MODAL ĐẶT LẠI MẬT KHẨU ══════════════ */}
+      {resetTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md border border-black/10 dark:border-white/10 animate-slide-up">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-black/5 dark:border-white/5">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-amber-100 dark:bg-amber-900/40 rounded-xl flex items-center justify-center">
+                  <KeyRound size={18} className="text-amber-600 dark:text-amber-400" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white">Đặt lại mật khẩu</h3>
+                  <p className="text-xs text-warm-gray dark:text-gray-400 mt-0.5 truncate max-w-[220px]">
+                    {resetTarget.fullName || resetTarget.username}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setResetTarget(null)}
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:bg-slate-700 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <form onSubmit={handleResetSubmit} className="p-6 space-y-4">
+              {/* Info banner */}
+              <div className="flex items-start gap-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-300 text-xs rounded-lg px-4 py-3">
+                <AlertTriangle size={14} className="flex-shrink-0 mt-0.5" />
+                <span>Mật khẩu mới sẽ được áp dụng ngay lập tức. Người dùng cần đăng nhập lại bằng mật khẩu mới này.</span>
+              </div>
+
+              {/* Error */}
+              {resetError && (
+                <div className="flex items-start gap-2 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3">
+                  <AlertCircle size={15} className="flex-shrink-0 mt-0.5" />
+                  {resetError}
+                </div>
+              )}
+
+              {/* Success */}
+              {resetSuccess && (
+                <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3">
+                  <CheckCircle2 size={15} />
+                  Đặt lại mật khẩu thành công!
+                </div>
+              )}
+
+              {/* Mật khẩu mới */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
+                  Mật khẩu mới *
+                </label>
+                <div className="relative">
+                  <input
+                    id="reset-new-password"
+                    type={showResetPwd ? 'text' : 'password'}
+                    className="input-field pr-10"
+                    value={resetPwd}
+                    onChange={(e) => setResetPwd(e.target.value)}
+                    placeholder="Ít nhất 6 ký tự..."
+                    required
+                    minLength={6}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowResetPwd(!showResetPwd)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showResetPwd ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Xác nhận mật khẩu */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">
+                  Xác nhận mật khẩu mới *
+                </label>
+                <div className="relative">
+                  <input
+                    id="reset-confirm-password"
+                    type={showResetPwdConfirm ? 'text' : 'password'}
+                    className={`input-field pr-10 ${
+                      resetPwdConfirm && resetPwd !== resetPwdConfirm
+                        ? 'border-red-400 focus:ring-red-300'
+                        : resetPwdConfirm && resetPwd === resetPwdConfirm
+                        ? 'border-green-400 focus:ring-green-300'
+                        : ''
+                    }`}
+                    value={resetPwdConfirm}
+                    onChange={(e) => setResetPwdConfirm(e.target.value)}
+                    placeholder="Nhập lại mật khẩu mới..."
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowResetPwdConfirm(!showResetPwdConfirm)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showResetPwdConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+                {resetPwdConfirm && resetPwd !== resetPwdConfirm && (
+                  <p className="text-xs text-red-500 flex items-center gap-1">
+                    <AlertCircle size={11} /> Mật khẩu xác nhận không khớp
+                  </p>
+                )}
+                {resetPwdConfirm && resetPwd === resetPwdConfirm && (
+                  <p className="text-xs text-green-600 flex items-center gap-1">
+                    <CheckCircle2 size={11} /> Mật khẩu khớp
+                  </p>
+                )}
+              </div>
+
+              {/* Tùy chọn buộc đổi lại lần đầu */}
+              <label className="flex items-start gap-3 cursor-pointer p-3 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] hover:bg-black/[0.06] dark:hover:bg-white/[0.07] transition-colors">
+                <input
+                  id="reset-force-change"
+                  type="checkbox"
+                  className="mt-0.5 w-4 h-4 accent-primary cursor-pointer"
+                  checked={forceChange}
+                  onChange={(e) => setForceChange(e.target.checked)}
+                />
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">Buộc đổi mật khẩu khi đăng nhập</p>
+                  <p className="text-xs text-warm-muted dark:text-gray-400 mt-0.5">
+                    Người dùng sẽ phải tự tạo mật khẩu mới sau khi đăng nhập bằng mật khẩu bạn đặt.
+                  </p>
+                </div>
+              </label>
+
+              {/* Actions */}
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  id="reset-password-submit"
+                  type="submit"
+                  className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors"
+                  disabled={resetting || resetSuccess}
+                >
+                  <KeyRound size={15} />
+                  {resetting ? 'Đang đặt lại...' : 'Xác nhận đặt lại'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setResetTarget(null)}
+                  className="btn-secondary py-2.5 px-4"
+                >
+                  Hủy
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

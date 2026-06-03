@@ -5,23 +5,23 @@ import { projectService } from '../../services/projectService';
 /**
  * Textarea thông minh có hỗ trợ @mention với dropdown gợi ý.
  *
- * @param {string}   value      - giá trị textarea (controlled)
- * @param {function} onChange   - (newValue: string) => void
- * @param {function} onSubmit   - () => void (gọi khi nhấn Enter không shift)
- * @param {number}   projectId  - ID project để fetch member gợi ý
- * @param {boolean}  disabled   - tắt input
+ * @param {string}   value          - giá trị textarea (controlled)
+ * @param {function} onChange       - (newValue: string) => void
+ * @param {function} onSubmit       - () => void (gọi khi nhấn Enter không shift)
+ * @param {number}   projectId      - ID project để fetch member gợi ý
+ * @param {boolean}  disabled       - tắt input
+ * @param {function} onImagePaste   - (file: File) => void — callback khi user paste ảnh vào textarea
  */
-const MentionInput = ({ value, onChange, onSubmit, projectId, disabled }) => {
+const MentionInput = ({ value, onChange, onSubmit, projectId, disabled, onImagePaste }) => {
   const [mentionState, setMentionState] = useState({
     open: false,
     query: '',
-    atPos: -1, // vị trí ký tự @ trong string
+    atPos: -1,
   });
   const [suggestions, setSuggestions] = useState([]);
   const [activeIdx, setActiveIdx] = useState(0);
   const textareaRef = useRef(null);
 
-  // Fetch gợi ý từ API sau khi query thay đổi (debounce 200ms)
   const [debouncedQuery] = useDebounce(mentionState.query, 200);
 
   React.useEffect(() => {
@@ -39,7 +39,6 @@ const MentionInput = ({ value, onChange, onSubmit, projectId, disabled }) => {
     const cursor = e.target.selectionStart;
     const textBeforeCursor = text.slice(0, cursor);
 
-    // Tìm @ gần nhất trước cursor (không có khoảng trắng giữa)
     const match = textBeforeCursor.match(/@([a-zA-Z0-9_]*)$/);
     if (match) {
       const atPos = cursor - match[0].length;
@@ -50,22 +49,39 @@ const MentionInput = ({ value, onChange, onSubmit, projectId, disabled }) => {
     }
   }, [onChange]);
 
+  // ── Paste: phát hiện ảnh trong clipboard (Ctrl+V) ────────────────────────
+  const handlePaste = useCallback((e) => {
+    if (!onImagePaste) return;
+
+    const items = Array.from(e.clipboardData?.items ?? []);
+    // Tìm item đầu tiên là ảnh trong clipboard
+    const imageItem = items.find((item) => item.type.startsWith('image/'));
+    if (!imageItem) return; // Không có ảnh → để trình duyệt paste text bình thường
+
+    // Ngăn trình duyệt tự xử lý (sẽ paste dưới dạng text rỗng hoặc HTML)
+    e.preventDefault();
+
+    const file = imageItem.getAsFile();
+    if (file) {
+      onImagePaste(file);
+    }
+  }, [onImagePaste]);
+
   // ── Insert username khi chọn gợi ý ───────────────────────────────────────
   const insertMention = useCallback((user) => {
     const atPos = mentionState.atPos;
     const queryLen = mentionState.query.length;
 
     const before = value.slice(0, atPos);
-    const after  = value.slice(atPos + queryLen + 1); // +1 cho ký tự @
+    const after  = value.slice(atPos + queryLen + 1);
     const newText = `${before}@${user.username} ${after}`;
 
     onChange(newText);
     setMentionState({ open: false, query: '', atPos: -1 });
     setSuggestions([]);
 
-    // Đặt lại cursor sau mention
     requestAnimationFrame(() => {
-      const newCursor = before.length + user.username.length + 2; // @ + username + space
+      const newCursor = before.length + user.username.length + 2;
       textareaRef.current?.setSelectionRange(newCursor, newCursor);
       textareaRef.current?.focus();
     });
@@ -103,13 +119,14 @@ const MentionInput = ({ value, onChange, onSubmit, projectId, disabled }) => {
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        className="input-field w-full resize-none text-sm"
+        onPaste={handlePaste}
+        className="input-field w-full resize-none text-sm !border-transparent !bg-transparent focus:!ring-0 !shadow-none"
         rows={2}
-        placeholder="Thêm bình luận... (@ để mention)"
+        placeholder="Thêm bình luận... (@ để mention, Ctrl+V để dán ảnh)"
         disabled={disabled}
       />
 
-      {/* ── Dropdown gợi ý ── */}
+      {/* ── Dropdown gợi ý @mention ── */}
       {mentionState.open && suggestions.length > 0 && (
         <div className="absolute bottom-full mb-1 left-0 w-60 bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
           <p className="text-[10px] text-warm-muted dark:text-gray-500 px-3 py-1.5 border-b border-black/5 dark:border-white/5 font-semibold uppercase tracking-wide">
@@ -124,7 +141,6 @@ const MentionInput = ({ value, onChange, onSubmit, projectId, disabled }) => {
                 i === activeIdx ? 'bg-indigo-50 dark:bg-indigo-900/30' : 'hover:bg-warm-white dark:hover:bg-slate-800'
               }`}
             >
-              {/* Avatar chữ cái đầu */}
               <div className="w-7 h-7 rounded-full bg-indigo-500 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
                 {(u.fullName || u.username || 'U')[0].toUpperCase()}
               </div>

@@ -3,7 +3,8 @@ import Modal from '../ui/Modal';
 import Avatar from '../ui/Avatar';
 import CommentList from '../comments/CommentList';
 import WorkLogList from '../worklogs/WorkLogList';
-import { Calendar, Flag, User, Edit2, Trash2, MessageSquare, Clock } from 'lucide-react';
+import AttachmentPanel from '../attachments/AttachmentPanel';
+import { Calendar, Flag, User, Edit2, Trash2, MessageSquare, Clock, Paperclip } from 'lucide-react';
 
 const PRIORITY_BADGE  = { HIGH: 'badge-warn', MEDIUM: 'badge-blue', LOW: 'badge-gray' };
 const STATUS_BADGE    = { TODO: 'badge-gray', IN_PROGRESS: 'badge-blue', DONE: 'badge-green' };
@@ -46,7 +47,7 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
             </p>
           </div>
 
-          {/* Tabs: Bình luận & Thời gian */}
+          {/* Tabs: Bình luận / Đính kèm / Thời gian */}
           <div className="border-b border-black/10 dark:border-white/10 flex gap-4">
             <button
               onClick={() => setActiveTab('comments')}
@@ -55,6 +56,14 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
               }`}
             >
               <MessageSquare size={16} /> Bình luận
+            </button>
+            <button
+              onClick={() => setActiveTab('attachments')}
+              className={`pb-2 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+                activeTab === 'attachments' ? 'border-primary text-primary' : 'border-transparent text-warm-gray dark:text-gray-400 hover:text-gray-800 dark:text-gray-100'
+              }`}
+            >
+              <Paperclip size={16} /> Đính kèm
             </button>
             <button
               onClick={() => setActiveTab('worklogs')}
@@ -73,6 +82,13 @@ const TaskDetailModal = ({ open, onClose, task, onDelete, onEdit, currentUser, p
                 taskId={task.id}
                 projectId={projectId || task.projectId}
                 currentUser={currentUser}
+              />
+            )}
+            {activeTab === 'attachments' && (
+              <AttachmentPanel
+                taskId={task.id}
+                currentUserId={currentUser?.id}
+                isAdmin={['ADMIN', 'ROLE_ADMIN'].includes(currentUser?.role)}
               />
             )}
             {activeTab === 'worklogs' && (

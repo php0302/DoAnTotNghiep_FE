@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import { workLogService } from '../../services/workLogService';
 import { projectService } from '../../services/projectService';
 import { useAuth } from '../../context/AuthContext';
@@ -7,6 +8,15 @@ import Avatar from '../../components/ui/Avatar';
 import Spinner from '../../components/ui/Spinner';
 
 const DailyReport = () => {
+  const { user } = useAuth();
+
+  // Redirect non-privileged users to projects page
+  if (user && ['MEMBER', 'ROLE_MEMBER'].includes(user.role)) {
+    return <Navigate to="/projects" replace />;
+  }
+
+  const isAdminOrPM = user && ['ADMIN', 'PROJECT_MANAGER', 'ROLE_ADMIN', 'ROLE_PROJECT_MANAGER'].includes(user.role);
+
   const [startDate, setStartDate] = useState(
     new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split('T')[0] // 7 days ago
   );
@@ -18,7 +28,6 @@ const DailyReport = () => {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const { user } = useAuth();
 
   useEffect(() => {
     projectService.getAll().then(res => setProjects(res.data?.data || []));
@@ -100,7 +109,7 @@ const DailyReport = () => {
             />
           </div>
 
-          {(user?.role?.name === 'ADMIN' || user?.role?.name === 'PROJECT_MANAGER') && (
+          {isAdminOrPM && (
             <>
               <div className="flex items-center gap-2 border-l border-black/10 dark:border-white/10 pl-4">
                 <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">Dự án:</span>
@@ -228,7 +237,7 @@ const DailyReport = () => {
                         {log.description || '—'}
                       </td>
                       <td className="py-3 px-6 text-right">
-                        {(user?.role?.name === 'ADMIN' || user?.role?.name === 'PROJECT_MANAGER' || log.userId === user?.id) && (
+                        {(isAdminOrPM || log.userId === user?.id) && (
                           <button 
                             onClick={() => handleDeleteLog(log.id)}
                             className="p-1.5 text-warm-gray dark:text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"

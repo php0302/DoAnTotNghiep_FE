@@ -8,6 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 import KanbanBoard from '../../components/kanban/KanbanBoard';
 import TaskDetailModal from '../../components/tasks/TaskDetailModal';
 import CreateTaskModal from '../../components/tasks/CreateTaskModal';
+import ProjectMembersModal from '../../components/projects/ProjectMembersModal';
 import Avatar from '../../components/ui/Avatar';
 import Spinner from '../../components/ui/Spinner';
 import { ArrowLeft, Plus, Users } from 'lucide-react';
@@ -23,6 +24,7 @@ const ProjectDetail = () => {
   const [editingTask, setEditingTask]   = useState(null);
   const [createStatus, setCreateStatus] = useState(null); // status mặc định khi mở modal tạo task
   const [projLoading, setProjLoading]   = useState(true);
+  const [showMembers, setShowMembers]   = useState(false);  // modal danh sách thành viên
 
   const { tasks, setTasks, loading, error, fetchTasks, getTasksByStatus, moveTask, createTask, updateTask, deleteTask } = useTasks(Number(id));
 
@@ -95,15 +97,27 @@ const ProjectDetail = () => {
 
         {/* Members + add task */}
         <div className="flex items-center gap-3">
-          {/* Member stack */}
-          <div className="flex items-center gap-1">
-            <Users size={14} className="text-warm-muted dark:text-gray-500" />
-            <div className="flex -space-x-2 ml-1">
-              {(project?.members ?? []).slice(0, 5).map((m, i) => (
-                <Avatar key={m.id ?? i} name={m.fullName || m.username} size="sm" className="border-2 border-white" />
+          {/* Member stack — nhấn để xem danh sách thành viên */}
+          <button
+            onClick={() => setShowMembers(true)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors group"
+            title="Xem thành viên dự án"
+          >
+            <Users size={14} className="text-warm-muted dark:text-gray-400 group-hover:text-primary transition-colors" />
+            <div className="flex -space-x-2">
+              {members.slice(0, 5).map((m, i) => (
+                <Avatar key={m.id ?? i} name={m.fullName || m.username} size="sm" className="border-2 border-white dark:border-slate-800" />
               ))}
+              {members.length === 0 && (
+                <span className="text-xs text-warm-muted dark:text-gray-500">0</span>
+              )}
             </div>
-          </div>
+            {members.length > 0 && (
+              <span className="text-xs text-warm-muted dark:text-gray-400 group-hover:text-primary transition-colors">
+                {members.length}
+              </span>
+            )}
+          </button>
 
           <button
             onClick={() => setCreateStatus('TODO')}
@@ -158,6 +172,14 @@ const ProjectDetail = () => {
           members={members}
         />
       )}
+
+      {/* Members Modal */}
+      <ProjectMembersModal
+        open={showMembers}
+        onClose={() => setShowMembers(false)}
+        projectName={project?.name}
+        members={members}
+      />
     </div>
   );
 };

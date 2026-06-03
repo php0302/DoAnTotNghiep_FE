@@ -62,6 +62,10 @@ const Sidebar = () => {
           if (to === '/' && user && ['MEMBER', 'ROLE_MEMBER'].includes(user.role)) {
             return null;
           }
+          // Hide Daily Report for regular members
+          if (to === '/reports/daily' && user && ['MEMBER', 'ROLE_MEMBER'].includes(user.role)) {
+            return null;
+          }
           return (
             <NavLink
               key={to}

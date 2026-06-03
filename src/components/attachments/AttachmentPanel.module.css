@@ -1,0 +1,337 @@
+/* AttachmentPanel.module.css */
+
+/* ─── Panel Container ────────────────────────────────────── */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ─── Header ─────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.headerTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ─── Drop Zone ──────────────────────────────────────────── */
+.dropzone {
+  border: 2px dashed var(--border-color, #cbd5e1);
+  border-radius: 10px;
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.1s ease;
+  user-select: none;
+  outline: none;
+}
+.dropzone:hover {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.04);
+}
+.dropzone:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+.dropzoneActive {
+  border-color: #6366f1 !important;
+  background: rgba(99, 102, 241, 0.08) !important;
+  transform: scale(1.01);
+}
+
+.dropzoneUploading {
+  cursor: not-allowed;
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.dropzonePlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.dropzoneIcon {
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 4px;
+  transition: transform 0.2s ease;
+}
+.dropzone:hover .dropzoneIcon,
+.dropzoneActive .dropzoneIcon {
+  transform: translateY(-2px);
+}
+
+.dropzoneText {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary, #475569);
+}
+.dropzoneText strong {
+  color: #6366f1;
+}
+
+.dropzoneHint {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+}
+
+/* ─── Progress Bar ───────────────────────────────────────── */
+.uploadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-secondary, #e2e8f0);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+  background-size: 200% 100%;
+  border-radius: 3px;
+  transition: width 0.25s ease;
+  animation: shimmerProgress 1.5s infinite;
+}
+
+@keyframes shimmerProgress {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.progressText {
+  font-size: 12px;
+  color: var(--text-secondary, #64748b);
+  font-weight: 500;
+}
+
+/* ─── Errors ─────────────────────────────────────────────── */
+.errors {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.errorItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #dc2626;
+  line-height: 1.4;
+}
+
+.apiError {
+  padding: 8px 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #dc2626;
+}
+
+/* ─── List ───────────────────────────────────────────────── */
+.listWrapper {
+  /* container */
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ─── Item ───────────────────────────────────────────────── */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg-secondary, #f8fafc);
+  border: 1px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.2s ease;
+}
+.item:hover {
+  background: var(--bg-hover, #f1f5f9);
+  border-color: var(--border-color, #e2e8f0);
+}
+
+.itemDeleting {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.itemIcon {
+  font-size: 22px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.itemInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.itemName {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6366f1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  transition: color 0.15s;
+}
+.itemName:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+.itemMeta {
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Item Actions ───────────────────────────────────────── */
+.itemActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.item:hover .itemActions {
+  opacity: 1;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.15s;
+}
+
+.downloadBtn:hover {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.deleteBtn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+.deleteBtn:disabled {
+  cursor: not-allowed;
+}
+
+/* ─── Empty State ────────────────────────────────────────── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 16px;
+  color: var(--text-muted, #94a3b8);
+}
+.empty span {
+  font-size: 32px;
+}
+.empty p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* ─── Skeleton Loading ───────────────────────────────────── */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skeletonItem {
+  height: 52px;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary, #f0f0f0) 25%,
+    var(--bg-hover, #e8e8e8) 50%,
+    var(--bg-secondary, #f0f0f0) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Dark mode support ──────────────────────────────────── */
+:global(.dark) .errorItem,
+:global(.dark) .apiError {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+:global(.dark) .skeletonItem {
+  background: linear-gradient(90deg, #1e293b 25%, #263548 50%, #1e293b 75%);
+  background-size: 200% 100%;
+}
