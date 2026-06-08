@@ -1,6 +1,17 @@
 import { Client } from '@stomp/stompjs';
 
-const WS_URL = 'ws://localhost:8080/ws';
+const getWsUrl = () => {
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+  if (apiBaseUrl) {
+    const baseUrl = apiBaseUrl.replace('/api/v1', '');
+    const wsProtocol = baseUrl.startsWith('https') ? 'wss://' : 'ws://';
+    const cleanUrl = baseUrl.replace(/^https?:\/\//, '');
+    return `${wsProtocol}${cleanUrl}/ws`;
+  }
+  return 'ws://localhost:8080/ws';
+};
+
+const WS_URL = getWsUrl();
 
 // Exponential backoff delays: 2s → 4s → 8s → 16s → 30s
 const RECONNECT_DELAYS = [2000, 4000, 8000, 16000, 30000];
