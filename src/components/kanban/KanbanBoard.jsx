@@ -2,7 +2,7 @@ import React from 'react';
 import { DragDropContext } from '@hello-pangea/dnd';
 import KanbanColumn from './KanbanColumn';
 
-const COLUMNS = ['TODO', 'IN_PROGRESS', 'DONE'];
+const COLUMNS = ['TODO', 'IN_PROGRESS', 'IN_REVIEW', 'TESTING', 'DONE', 'BLOCKED'];
 
 /**
  * KanbanBoard — wrapper DragDropContext + render 3 columns

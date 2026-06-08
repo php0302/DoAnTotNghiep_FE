@@ -6,7 +6,7 @@ export const taskService = {
   getById:       (taskId)             => apiClient.get(`/tasks/${taskId}`),
   create:        (projectId, data)    => apiClient.post(`/projects/${projectId}/tasks`, data),
   update:        (taskId, data)       => apiClient.put(`/tasks/${taskId}`, data),
-  updateStatus:  (taskId, status)     => apiClient.patch(`/tasks/${taskId}/status?status=${status}`),
+  updateStatus:  (taskId, status)     => apiClient.patch(`/tasks/${taskId}/status`, { status }),
   assign:        (taskId, userId)     => apiClient.patch(`/tasks/${taskId}/assign?userId=${userId}`),
   delete:        (taskId)             => apiClient.delete(`/tasks/${taskId}`),
 

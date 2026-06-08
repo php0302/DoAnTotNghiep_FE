@@ -70,8 +70,18 @@ const ProjectDetail = () => {
   const tasksByStatus = {
     TODO:        getTasksByStatus('TODO'),
     IN_PROGRESS: getTasksByStatus('IN_PROGRESS'),
+    IN_REVIEW:   getTasksByStatus('IN_REVIEW'),
+    TESTING:     getTasksByStatus('TESTING'),
     DONE:        getTasksByStatus('DONE'),
+    BLOCKED:     getTasksByStatus('BLOCKED'),
   };
+
+  const totalTasks = tasks.length;
+  const doneTasks = tasks.filter(t => t.status === 'DONE').length;
+  const inProgressTasks = tasks.filter(t => t.status === 'IN_PROGRESS').length;
+  const todayStr = new Date().toLocaleDateString('en-CA');
+  const overdueTasks = tasks.filter(t => t.status !== 'DONE' && t.deadline && t.deadline < todayStr).length;
+  const progressPercent = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
 
   if (projLoading) {
     return <div className="flex justify-center py-20"><Spinner size="lg" /></div>;
@@ -130,8 +140,40 @@ const ProjectDetail = () => {
 
       {/* ── Error ── */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-danger text-sm rounded-xl px-4 py-3">{error}</div>
+        <div className="bg-red-50 border border-red-200 text-danger text-sm rounded-xl px-4 py-3 animate-fade-in">{error}</div>
       )}
+
+      {/* ── Project Statistics Bar ── */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 bg-white dark:bg-slate-800 border border-black/10 dark:border-white/10 rounded-2xl p-4 shadow-sm">
+        <div className="flex flex-col p-2">
+          <span className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Tổng số task</span>
+          <span className="text-2xl font-bold text-gray-800 dark:text-white mt-1">{totalTasks}</span>
+        </div>
+        <div className="flex flex-col p-2 border-l border-black/5 dark:border-white/5 pl-4">
+          <span className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Hoàn thành</span>
+          <span className="text-2xl font-bold text-success mt-1">{doneTasks}</span>
+        </div>
+        <div className="flex flex-col p-2 border-l border-black/5 dark:border-white/5 pl-4">
+          <span className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Đang làm</span>
+          <span className="text-2xl font-bold text-primary mt-1">{inProgressTasks}</span>
+        </div>
+        <div className="flex flex-col p-2 border-l border-black/5 dark:border-white/5 pl-4">
+          <span className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Quá hạn</span>
+          <span className="text-2xl font-bold text-danger mt-1">{overdueTasks}</span>
+        </div>
+        <div className="flex flex-col p-2 md:col-span-1 col-span-2 border-l border-black/5 dark:border-white/5 pl-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Tiến độ</span>
+            <span className="text-sm font-bold text-primary">{progressPercent}%</span>
+          </div>
+          <div className="w-full bg-gray-100 dark:bg-slate-700 h-2.5 rounded-full mt-3 overflow-hidden">
+            <div 
+              className="bg-primary h-full rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+        </div>
+      </div>
 
       {/* ── Kanban Board ── */}
       {loading ? (

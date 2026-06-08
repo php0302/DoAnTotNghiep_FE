@@ -32,14 +32,23 @@ export const useTasks = (projectId) => {
 
   /** Cập nhật status sau drag-and-drop */
   const moveTask = async (taskId, newStatus) => {
+    const taskToMove = tasks.find((t) => t.id === taskId);
+    if (!taskToMove) return;
+    const oldStatus = taskToMove.status;
+
+    setError(null);
     setTasks((prev) =>
       prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)),
     );
+
     try {
       await taskService.updateStatus(taskId, newStatus);
-    } catch {
-      // Revert nếu API lỗi
-      fetchTasks();
+    } catch (e) {
+      setTasks((prev) =>
+        prev.map((t) => (t.id === taskId ? { ...t, status: oldStatus } : t)),
+      );
+      setError(e?.response?.data?.message ?? 'Không thể chuyển trạng thái công việc');
+      setTimeout(() => setError(null), 5000);
     }
   };
 

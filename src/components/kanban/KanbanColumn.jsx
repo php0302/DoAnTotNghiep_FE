@@ -3,11 +3,13 @@ import { Droppable } from '@hello-pangea/dnd';
 import { Plus } from 'lucide-react';
 import TaskCard from './TaskCard';
 
-/** Config từng column */
 const COLUMN_CONFIG = {
   TODO:        { label: 'Cần làm',      dot: 'bg-warm-muted',  header: 'bg-warm-white dark:bg-slate-800' },
   IN_PROGRESS: { label: 'Đang làm',     dot: 'bg-primary',     header: 'bg-primary-light dark:bg-primary/20' },
+  IN_REVIEW:   { label: 'Chờ review',   dot: 'bg-orange-500',  header: 'bg-orange-50 dark:bg-orange-500/20' },
+  TESTING:     { label: 'Đang test',    dot: 'bg-purple-500',  header: 'bg-purple-50 dark:bg-purple-500/20' },
   DONE:        { label: 'Hoàn thành',   dot: 'bg-success',     header: 'bg-green-50 dark:bg-green-500/20' },
+  BLOCKED:     { label: 'Tạm dừng',     dot: 'bg-danger',      header: 'bg-red-50 dark:bg-red-500/20' },
 };
 
 /**
@@ -25,13 +27,15 @@ const KanbanColumn = ({ status, tasks = [], onTaskClick, onAddTask, currentUserI
           <span className="text-xs font-bold text-gray-700 dark:text-gray-200 uppercase tracking-wide">{cfg.label}</span>
           <span className="badge-gray">{tasks.length}</span>
         </div>
-        <button
-          onClick={() => onAddTask(status)}
-          className="btn-ghost p-1 rounded-lg text-warm-gray dark:text-gray-400 hover:text-primary"
-          title="Thêm task"
-        >
-          <Plus size={16} />
-        </button>
+        {status === 'TODO' && (
+          <button
+            onClick={() => onAddTask(status)}
+            className="btn-ghost p-1 rounded-lg text-warm-gray dark:text-gray-400 hover:text-primary"
+            title="Thêm task"
+          >
+            <Plus size={16} />
+          </button>
+        )}
       </div>
 
       {/* Droppable zone */}

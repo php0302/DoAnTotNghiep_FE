@@ -9,9 +9,23 @@ import { Calendar, Flag, CheckSquare, AlertCircle } from 'lucide-react';
 import websocketService from '../../services/websocketService';
 
 const PRIORITY_BADGE = { HIGH: 'badge-warn', MEDIUM: 'badge-blue', LOW: 'badge-gray' };
-const STATUS_BADGE = { TODO: 'badge-gray', IN_PROGRESS: 'badge-blue', DONE: 'badge-green' };
+const STATUS_BADGE = {
+  TODO: 'badge-gray',
+  IN_PROGRESS: 'badge-blue',
+  IN_REVIEW: 'badge-warn',
+  TESTING: 'badge-indigo',
+  DONE: 'badge-green',
+  BLOCKED: 'badge-danger'
+};
 const PRIORITY_LABELS = { LOW: 'Thấp', MEDIUM: 'Trung bình', HIGH: 'Cao' };
-const STATUS_LABELS = { TODO: 'Cần làm', IN_PROGRESS: 'Đang làm', DONE: 'Hoàn thành' };
+const STATUS_LABELS = {
+  TODO: 'Cần làm',
+  IN_PROGRESS: 'Đang làm',
+  IN_REVIEW: 'Chờ review',
+  TESTING: 'Đang test',
+  DONE: 'Hoàn thành',
+  BLOCKED: 'Tạm dừng'
+};
 
 const MyTasks = () => {
   const { user } = useAuth();
@@ -65,7 +79,10 @@ const MyTasks = () => {
     { key: 'ALL', label: 'Tất cả' },
     { key: 'TODO', label: 'Cần làm' },
     { key: 'IN_PROGRESS', label: 'Đang làm' },
+    { key: 'IN_REVIEW', label: 'Chờ review' },
+    { key: 'TESTING', label: 'Đang test' },
     { key: 'DONE', label: 'Hoàn thành' },
+    { key: 'BLOCKED', label: 'Tạm dừng' },
   ];
 
   return (
@@ -118,7 +135,10 @@ const MyTasks = () => {
                 <div className={`w-2 h-8 rounded-full flex-shrink-0
                   ${task.status === 'DONE' ? 'bg-success'
                     : task.status === 'IN_PROGRESS' ? 'bg-primary'
-                      : 'bg-warm-muted'}`}
+                    : task.status === 'IN_REVIEW' ? 'bg-orange-500'
+                    : task.status === 'TESTING' ? 'bg-purple-500'
+                    : task.status === 'BLOCKED' ? 'bg-red-500'
+                    : 'bg-warm-muted'}`}
                 />
 
                 {/* Title + project */}

@@ -4,13 +4,19 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recha
 const COLORS = {
   TODO: '#94a3b8',        // slate-400
   IN_PROGRESS: '#3b82f6', // blue-500
+  IN_REVIEW: '#f59e0b',   // amber-500
+  TESTING: '#8b5cf6',     // purple-500
   DONE: '#10b981',        // emerald-500
+  BLOCKED: '#ef4444',     // red-500
 };
 
 const LABELS = {
   TODO: 'Cần làm',
   IN_PROGRESS: 'Đang làm',
+  IN_REVIEW: 'Chờ review',
+  TESTING: 'Đang test',
   DONE: 'Hoàn thành',
+  BLOCKED: 'Tạm dừng',
 };
 
 const TaskStatusChart = ({ data }) => {

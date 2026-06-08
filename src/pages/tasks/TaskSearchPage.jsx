@@ -12,9 +12,12 @@ const PRIORITY_CONFIG = {
   LOW:    { label: 'Thấp',       cls: 'badge-gray', dot: 'bg-gray-400' },
 };
 const STATUS_CONFIG = {
-  TODO:        { label: 'Cần làm',   cls: 'badge-gray',  bar: 'bg-gray-400' },
-  IN_PROGRESS: { label: 'Đang làm',  cls: 'badge-blue',  bar: 'bg-blue-500' },
-  DONE:        { label: 'Hoàn thành',cls: 'badge-green', bar: 'bg-green-500' },
+  TODO:        { label: 'Cần làm',    cls: 'badge-gray',   bar: 'bg-gray-400' },
+  IN_PROGRESS: { label: 'Đang làm',   cls: 'badge-blue',   bar: 'bg-blue-500' },
+  IN_REVIEW:   { label: 'Chờ review', cls: 'badge-warn',   bar: 'bg-orange-500' },
+  TESTING:     { label: 'Đang test',  cls: 'badge-indigo', bar: 'bg-indigo-500' },
+  DONE:        { label: 'Hoàn thành', cls: 'badge-green',  bar: 'bg-green-500' },
+  BLOCKED:     { label: 'Tạm dừng',   cls: 'badge-red',    bar: 'bg-red-500' },
 };
 
 // ─── Sub-components ──────────────────────────────────────────────────────────

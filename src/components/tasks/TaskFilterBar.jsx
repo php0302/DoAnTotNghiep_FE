@@ -6,7 +6,10 @@ import { userService } from '../../services/userService';
 const STATUS_OPTIONS = [
   { value: 'TODO',        label: 'Cần làm' },
   { value: 'IN_PROGRESS', label: 'Đang làm' },
+  { value: 'IN_REVIEW',   label: 'Chờ review' },
+  { value: 'TESTING',     label: 'Đang test' },
   { value: 'DONE',        label: 'Hoàn thành' },
+  { value: 'BLOCKED',     label: 'Tạm dừng' },
 ];
 
 const PRIORITY_OPTIONS = [

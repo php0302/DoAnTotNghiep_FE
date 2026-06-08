@@ -7,9 +7,23 @@ import AttachmentPanel from '../attachments/AttachmentPanel';
 import { Calendar, Flag, User, Edit2, Trash2, MessageSquare, Clock, Paperclip } from 'lucide-react';
 
 const PRIORITY_BADGE  = { HIGH: 'badge-warn', MEDIUM: 'badge-blue', LOW: 'badge-gray' };
-const STATUS_BADGE    = { TODO: 'badge-gray', IN_PROGRESS: 'badge-blue', DONE: 'badge-green' };
 const PRIORITY_LABELS = { LOW: 'Thấp', MEDIUM: 'Trung bình', HIGH: 'Cao' };
-const STATUS_LABELS   = { TODO: 'Cần làm', IN_PROGRESS: 'Đang làm', DONE: 'Hoàn thành' };
+const STATUS_BADGE    = {
+  TODO: 'badge-gray',
+  IN_PROGRESS: 'badge-blue',
+  IN_REVIEW: 'badge-warn',
+  TESTING: 'badge-indigo',
+  DONE: 'badge-green',
+  BLOCKED: 'badge-danger'
+};
+const STATUS_LABELS   = {
+  TODO: 'Cần làm',
+  IN_PROGRESS: 'Đang làm',
+  IN_REVIEW: 'Chờ review',
+  TESTING: 'Đang test',
+  DONE: 'Hoàn thành',
+  BLOCKED: 'Tạm dừng'
+};
 
 /**
  * Task Detail Modal — chi tiết task + comment/mention

@@ -4,7 +4,14 @@ import { CheckSquare } from 'lucide-react';
 
 const PRIORITIES = ['LOW', 'MEDIUM', 'HIGH'];
 const PRIORITY_LABELS = { LOW: 'Thấp', MEDIUM: 'Trung bình', HIGH: 'Cao' };
-const STATUS_LABELS = { TODO: 'Cần làm', IN_PROGRESS: 'Đang làm', DONE: 'Hoàn thành' };
+const STATUS_LABELS = {
+  TODO: 'Cần làm',
+  IN_PROGRESS: 'Đang làm',
+  IN_REVIEW: 'Chờ review',
+  TESTING: 'Đang test',
+  DONE: 'Hoàn thành',
+  BLOCKED: 'Tạm dừng',
+};
 
 /**
  * Modal tạo task mới trong project
@@ -78,21 +85,23 @@ const CreateTaskModal = ({ open, onClose, onCreate, onUpdate, task, defaultStatu
             rows={2} className="input-field resize-none" placeholder="Chi tiết task..." />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className={task?.id ? "grid grid-cols-2 gap-3" : "space-y-1"}>
           <div className="space-y-1">
             <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Ưu tiên</label>
             <select name="priority" value={form.priority} onChange={handleChange} className="input-field">
               {PRIORITIES.map((p) => <option key={p} value={p}>{PRIORITY_LABELS[p]}</option>)}
             </select>
           </div>
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Trạng thái</label>
-            <select name="status" value={form.status} onChange={handleChange} className="input-field">
-              <option value="TODO">{STATUS_LABELS.TODO}</option>
-              <option value="IN_PROGRESS">{STATUS_LABELS.IN_PROGRESS}</option>
-              <option value="DONE">{STATUS_LABELS.DONE}</option>
-            </select>
-          </div>
+          {task?.id && (
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Trạng thái</label>
+              <select name="status" value={form.status} onChange={handleChange} className="input-field">
+                {Object.entries(STATUS_LABELS).map(([k, v]) => (
+                  <option key={k} value={k}>{v}</option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-3">
