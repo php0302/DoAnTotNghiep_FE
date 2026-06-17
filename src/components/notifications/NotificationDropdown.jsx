@@ -6,6 +6,7 @@ const TYPE_CONFIG = {
   TASK_ASSIGNED:    { icon: Bell,          color: 'text-blue-500',   bg: 'bg-blue-50'   },
   DEADLINE_UPDATED: { icon: Calendar,      color: 'text-orange-500', bg: 'bg-orange-50' },
   TASK_DELETED:     { icon: AlertCircle,   color: 'text-red-500',    bg: 'bg-red-50'    },
+  DEADLINE_PASSED:  { icon: AlertCircle,   color: 'text-red-500',    bg: 'bg-red-50 dark:bg-red-950/20' },
   COMMENT_ADDED:    { icon: MessageSquare, color: 'text-green-500',  bg: 'bg-green-50'  },
   GENERAL:          { icon: Bell,          color: 'text-gray-400',   bg: 'bg-gray-50 dark:bg-slate-800/80'   },
 };

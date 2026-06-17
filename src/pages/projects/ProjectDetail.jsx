@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { projectService } from '../../services/projectService';
 import { userService } from '../../services/userService';
 import { useTasks } from '../../hooks/useTasks';
@@ -12,11 +12,22 @@ import ProjectMembersModal from '../../components/projects/ProjectMembersModal';
 import Avatar from '../../components/ui/Avatar';
 import Spinner from '../../components/ui/Spinner';
 import { ArrowLeft, Plus, Users } from 'lucide-react';
+import { useNotifications } from '../../context/NotificationContext';
+
+const STATUS_LABELS = {
+  TODO: 'Cần làm',
+  IN_PROGRESS: 'Đang làm',
+  IN_REVIEW: 'Chờ review',
+  TESTING: 'Đang test',
+  DONE: 'Hoàn thành',
+  BLOCKED: 'Tạm dừng',
+};
 
 const ProjectDetail = () => {
   const { id }      = useParams();
   const navigate    = useNavigate();
   const { user }    = useAuth();
+  const { pushToast } = useNotifications();
 
   const [project, setProject]         = useState(null);
   const [members, setMembers]         = useState([]);
@@ -26,7 +37,29 @@ const ProjectDetail = () => {
   const [projLoading, setProjLoading]   = useState(true);
   const [showMembers, setShowMembers]   = useState(false);  // modal danh sách thành viên
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queryTaskId = searchParams.get('taskId');
+
   const { tasks, setTasks, loading, error, fetchTasks, getTasksByStatus, moveTask, createTask, updateTask, deleteTask } = useTasks(Number(id));
+
+  // Tự động mở modal chi tiết task khi URL có query param taskId
+  useEffect(() => {
+    if (queryTaskId && tasks.length > 0) {
+      const foundTask = tasks.find(t => t.id === Number(queryTaskId));
+      if (foundTask) {
+        setSelectedTask(foundTask);
+      }
+    }
+  }, [queryTaskId, tasks]);
+
+  const handleCloseDetail = () => {
+    setSelectedTask(null);
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev);
+      newParams.delete('taskId');
+      return newParams;
+    });
+  };
 
   // ── Realtime updates qua WebSocket ──────────────────────────────────────────
   // Hook này lắng nghe /topic/project.{id} và tự động cập nhật state `tasks`
@@ -61,7 +94,29 @@ const ProjectDetail = () => {
 
     // Kiểm tra quyền: chỉ người được giao task hoặc admin/pm mới kéo được
     const task = tasks.find((t) => t.id === taskId);
-    if (!isAdminOrManager && task?.assignedToId !== user?.id) return;
+    if (!task) return;
+
+    // Phân quyền chuyển đổi trạng thái đặc thù:
+    // - Từ IN_REVIEW sang TESTING: chỉ PM/Admin
+    // - Từ TESTING sang DONE: chỉ PM/Admin
+    if ((task.status === 'IN_REVIEW' && newStatus === 'TESTING') ||
+        (task.status === 'TESTING' && newStatus === 'DONE')) {
+      if (!isAdminOrManager) {
+        pushToast({
+          content: `Chỉ Quản lý dự án (PM) hoặc Admin mới được phép chuyển trạng thái từ "${STATUS_LABELS[task.status]}" sang "${STATUS_LABELS[newStatus]}".`,
+          type: 'TASK_DELETED'
+        });
+        return;
+      }
+    }
+
+    if (!isAdminOrManager && task.assignedToId !== user?.id) {
+      pushToast({
+        content: 'Chỉ thành viên được giao task hoặc PM/Admin mới có quyền di chuyển task này.',
+        type: 'TASK_DELETED'
+      });
+      return;
+    }
 
     moveTask(taskId, newStatus);
   };
@@ -193,10 +248,10 @@ const ProjectDetail = () => {
       {selectedTask && (
         <TaskDetailModal
           open={!!selectedTask}
-          onClose={() => setSelectedTask(null)}
+          onClose={handleCloseDetail}
           task={selectedTask}
           onDelete={deleteTask}
-          onEdit={(task) => { setSelectedTask(null); setEditingTask(task); }}
+          onEdit={(task) => { handleCloseDetail(); setEditingTask(task); }}
           currentUser={user}
           projectId={Number(id)}
         />

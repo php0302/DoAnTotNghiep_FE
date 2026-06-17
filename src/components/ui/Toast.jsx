@@ -5,6 +5,7 @@ const TYPE_CONFIG = {
   TASK_ASSIGNED:    { icon: Bell,          color: 'text-blue-600',   bg: 'bg-blue-50',   border: 'border-blue-200'  },
   DEADLINE_UPDATED: { icon: Calendar,      color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-200'},
   TASK_DELETED:     { icon: AlertCircle,   color: 'text-red-600',    bg: 'bg-red-50',    border: 'border-red-200'   },
+  DEADLINE_PASSED:  { icon: AlertCircle,   color: 'text-red-600',    bg: 'bg-red-50 dark:bg-red-950/20', border: 'border-red-200 dark:border-red-800/50' },
   COMMENT_ADDED:    { icon: MessageSquare, color: 'text-green-600',  bg: 'bg-green-50',  border: 'border-green-200' },
   GENERAL:          { icon: Bell,          color: 'text-gray-600',   bg: 'bg-gray-50 dark:bg-slate-800/80',   border: 'border-gray-200'  },
 };
@@ -32,7 +33,7 @@ const Toast = ({ notification, onDismiss }) => {
 
   const handleDismiss = () => {
     setLeaving(true);
-    setTimeout(() => onDismiss(notification.id), 350);
+    setTimeout(() => onDismiss(notification._toastId || notification.id), 350);
   };
 
   return (
@@ -81,7 +82,7 @@ export const ToastContainer = ({ toasts, onDismiss }) => {
   return (
     <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-2 pointer-events-none">
       {toasts.map((t) => (
-        <div key={t.id} className="pointer-events-auto">
+        <div key={t._toastId || t.id} className="pointer-events-auto">
           <Toast notification={t} onDismiss={onDismiss} />
         </div>
       ))}

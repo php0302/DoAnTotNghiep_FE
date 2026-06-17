@@ -17,6 +17,7 @@ const WorkLogList = ({ task, currentUser }) => {
 
   const isAdminOrManager = ['ADMIN', 'ROLE_ADMIN', 'PROJECT_MANAGER', 'ROLE_PROJECT_MANAGER'].includes(currentUser?.role);
   const isAssignee = currentUser && (task?.assignedToId === currentUser.id || task?.assignee?.id === currentUser.id);
+  const isOverdue = task?.deadline && task.deadline < todayStr && task.status !== 'DONE';
 
   const fetchLogs = async () => {
     try {
@@ -83,7 +84,17 @@ const WorkLogList = ({ task, currentUser }) => {
   return (
     <div className="space-y-4">
       {/* Form thêm mới hoặc cảnh báo phân quyền */}
-      {isAssignee ? (
+      {isOverdue ? (
+        <div className="flex items-start gap-2.5 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 text-red-800 dark:text-red-300 rounded-xl px-4 py-3 text-xs leading-relaxed">
+          <span className="text-sm mt-0.5">⚠️</span>
+          <div>
+            <p className="font-semibold text-red-900 dark:text-red-200 mb-0.5">Không thể ghi nhận thời gian</p>
+            <p className="text-red-700 dark:text-red-400">
+              Công việc này đã quá hạn deadline ({task?.deadline && new Date(task.deadline).toLocaleDateString('vi-VN')}). Không thể báo cáo thời gian làm.
+            </p>
+          </div>
+        </div>
+      ) : isAssignee ? (
         <form onSubmit={handleSubmit} className="bg-warm-white dark:bg-slate-800 p-4 rounded-lg border border-black/10 dark:border-white/10 space-y-3">
           <div className="flex items-center justify-between">
             <h5 className="text-sm font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">

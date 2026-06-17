@@ -89,7 +89,7 @@ export const NotificationProvider = ({ children }) => {
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
-    <NotificationContext.Provider value={{ notifications, unreadCount, markRead, markAllRead, fetchNotifications }}>
+    <NotificationContext.Provider value={{ notifications, unreadCount, markRead, markAllRead, fetchNotifications, pushToast }}>
       {children}
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </NotificationContext.Provider>

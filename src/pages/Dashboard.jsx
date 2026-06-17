@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useProjects } from '../hooks/useProjects';
 import { taskService } from '../services/taskService';
@@ -19,6 +19,22 @@ const Dashboard = () => {
   const [deleteTarget, setDeleteTarget] = useState(null); // id của project đang chờ xoá
 
   const canManage = ['ADMIN', 'ROLE_ADMIN', 'PROJECT_MANAGER', 'ROLE_PROJECT_MANAGER'].includes(user?.role);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const taskId = searchParams.get('taskId');
+
+  useEffect(() => {
+    if (taskId) {
+      taskService.getById(taskId)
+        .then(({ data }) => {
+          const task = data?.data;
+          if (task && task.projectId) {
+            navigate(`/projects/${task.projectId}?taskId=${taskId}`, { replace: true });
+          }
+        })
+        .catch(() => {});
+    }
+  }, [taskId, navigate]);
 
   useEffect(() => {
     fetchProjects();
