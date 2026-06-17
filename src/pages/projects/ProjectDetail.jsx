@@ -267,6 +267,7 @@ const ProjectDetail = () => {
           task={editingTask}
           defaultStatus={createStatus || editingTask?.status || 'TODO'}
           members={members}
+          projectEndDate={project?.endDate}
         />
       )}
 

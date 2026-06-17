@@ -21,7 +21,7 @@ const STATUS_LABELS = {
  * @param {string} defaultStatus - status mặc định ('TODO' | 'IN_PROGRESS' | 'DONE')
  * @param {Array} members - danh sách member để assign
  */
-const CreateTaskModal = ({ open, onClose, onCreate, onUpdate, task, defaultStatus = 'TODO', members = [] }) => {
+const CreateTaskModal = ({ open, onClose, onCreate, onUpdate, task, defaultStatus = 'TODO', members = [], projectEndDate }) => {
   // Lấy ngày hiện tại theo giờ địa phương (YYYY-MM-DD)
   const today = new Date().toLocaleDateString('en-CA');
 
@@ -42,6 +42,10 @@ const CreateTaskModal = ({ open, onClose, onCreate, onUpdate, task, defaultStatu
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) { setError('Tiêu đề task không được để trống'); return; }
+    if (projectEndDate && form.deadline && form.deadline > projectEndDate) {
+      setError(`Deadline không được vượt quá ngày kết thúc dự án (${projectEndDate})`);
+      return;
+    }
     setLoading(true);
     setError('');
     try {
@@ -107,7 +111,7 @@ const CreateTaskModal = ({ open, onClose, onCreate, onUpdate, task, defaultStatu
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <label className="text-xs font-semibold text-warm-gray dark:text-gray-400 uppercase tracking-wide">Deadline</label>
-            <input type="date" name="deadline" value={form.deadline} onChange={handleChange} min={today}
+            <input type="date" name="deadline" value={form.deadline} onChange={handleChange} min={today} max={projectEndDate}
               className="input-field" />
           </div>
           {members.length > 0 && (
